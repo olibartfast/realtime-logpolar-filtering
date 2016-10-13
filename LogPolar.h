@@ -3,6 +3,7 @@
 
 #include "Image.h"
 
+#define BLOCKSZ 32
 
 class LogPolar{
 protected:

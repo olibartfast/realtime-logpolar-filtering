@@ -26,7 +26,7 @@ void LPWilsonGpu::create_map(){
  
  cudaMalloc((void**)&xc_d, R*S*sizeof(float));
  cudaMalloc((void**)&yc_d, R*S*sizeof(float));
- dim3 dimBlock(16, 16);
+ dim3 dimBlock(BLOCKSZ, BLOCKSZ);
  dim3 dimCGrid(R/dimBlock.x+1, S/dimBlock.y+1);
 
  bool uMaxFoveaCheck=false;
@@ -67,13 +67,13 @@ void LPWilsonGpu::to_cortical()
 {
  int *cort=(int*)malloc(R*S*sizeof(int));
 
-  dim3 dimBlock(16, 16);
+  dim3 dimBlock(BLOCKSZ, BLOCKSZ);
   dim3 dimRSGrid(R/dimBlock.x+1, S/dimBlock.y+1);
  
  interpKernel<<<dimRSGrid, dimBlock>>>(imgfilter->GetGpuCPnt(), xc_d, yc_d, W, H, R, S,true, imgfilter->GetGpuRPnt());
 
  cudaMalloc((void**)&IMG_d, (W+2*rfMaxRadius+1)*(H+2*rfMaxRadius+1)*sizeof(float));
- dim3 dimBlockIMG(16,16);
+ dim3 dimBlockIMG(BLOCKSZ,BLOCKSZ);
  dim3 dimGridIMG(W/dimBlockIMG.x+1, H/dimBlockIMG.y+1);
  IMGsetKernel<<<dimGridIMG,dimBlockIMG>>>(IMG_d, imgfilter->GetGpuRPnt(), W,H,rfMaxRadius);
 
@@ -95,7 +95,7 @@ void LPWilsonGpu::to_cartesian()
 {
  int *ret= (int*)malloc(W*H*sizeof(int));
 
-  dim3 dimBlock(16, 16);
+  dim3 dimBlock(BLOCKSZ, BLOCKSZ);
   dim3 dimWHGrid(W/dimBlock.x+1, H/dimBlock.y+1);
  
  interpKernel<<<dimWHGrid, dimBlock>>>(imgfilter->GetGpuRPnt(), e_d, n_d, R, S, W, H,false, imgfilter->GetGpuCPnt());

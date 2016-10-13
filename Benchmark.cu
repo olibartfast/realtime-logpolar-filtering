@@ -4,10 +4,7 @@
 #include "LPWilson.h"
 #include "LPWilsonGpu.h"
 
-
-
-
-
+#include <unistd.h>
 
 void Benchmark::ReadImg()
 {
@@ -141,6 +138,9 @@ void Benchmark::Run()
  cout<<i+1<<"/"<<N<<endl;
  cout<<"----------------------------------------"<<endl;
  //---------------------------------------------------------
+
+
+
  LPBilinear  lpbdir(image, false);
 
  startCPU=clock();
@@ -163,6 +163,8 @@ void Benchmark::Run()
  avg[1]=(avg[1]*i+time)/(i+1);
  cout<<"LPBilinear diretto+inverso: "<<time<<" ms"<<endl<<" Avg time: "<<avg[1]<<" ms"<<endl;
  
+ usleep(1000*1000);
+
  //---------------------------------------------------------
  image->SetData(tmp->GetW(),tmp->GetH(), tmp->GetDataPnt());
  LPBilinearGpu lpbgpudir(image, false);

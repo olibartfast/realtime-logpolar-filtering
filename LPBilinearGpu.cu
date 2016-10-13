@@ -25,7 +25,7 @@ void LPBilinearGpu::process()
 void LPBilinearGpu::create_map(){
  cudaMalloc((void**)&xc_d, R*S*sizeof(float));
  cudaMalloc((void**)&yc_d, R*S*sizeof(float));
- dim3 dimBlock(16, 16);
+ dim3 dimBlock(BLOCKSZ, BLOCKSZ);
  dim3 dimCGrid(R/dimBlock.x+1, S/dimBlock.y+1);
  
  createCorticalMapKernel<<<dimCGrid, dimBlock>>>(x0,y0,a,q,p0, xc_d,yc_d,R,S);
@@ -47,7 +47,7 @@ if (inv)
 void LPBilinearGpu::to_cortical(){
  int *cort=new int[R*S];
 
-  dim3 dimBlock(16, 16);
+  dim3 dimBlock(BLOCKSZ, BLOCKSZ);
   dim3 dimGrid(R/dimBlock.x+1, S/dimBlock.y+1);
  
  interpKernel<<<dimGrid, dimBlock>>>(imgfilter->GetGpuCPnt(), xc_d, yc_d, W, H, R, S,true, imgfilter->GetGpuRPnt());
@@ -61,7 +61,7 @@ void LPBilinearGpu::to_cortical(){
 void LPBilinearGpu::to_cartesian(){
  int *ret= new int [W*H];
 
-  dim3 dimBlock(16, 16);
+  dim3 dimBlock(BLOCKSZ, BLOCKSZ);
   dim3 dimGrid(W/dimBlock.x+1, H/dimBlock.y+1);
  
  interpKernel<<<dimGrid, dimBlock>>>(imgfilter->GetGpuRPnt(), e_d, n_d, R, S, W, H,false, imgfilter->GetGpuCPnt());

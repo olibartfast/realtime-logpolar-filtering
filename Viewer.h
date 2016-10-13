@@ -7,6 +7,7 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include <opencv2/videoio.hpp>
 
 
 class Viewer{
@@ -15,7 +16,7 @@ class Viewer{
 	cv::Mat img;
 	cv::Mat output;
 	time_t start,end, time_last_cycle;
-	int fps, delay;
+	int fps;
 
 public:
 	Viewer(){}

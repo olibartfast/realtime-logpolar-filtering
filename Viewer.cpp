@@ -48,14 +48,13 @@ void Viewer::show()
 {
 	
 	menu_elab();
-	int filtermode='$';
-	int key=0;
-	delay=1;
 	cv::VideoCapture capture(0);
 	start=clock();
 	int counter=0;
-	while ( (key=cvWaitKey(delay))!=27)
+	char filtermode = 0;
+	for (;;)
 	{
+		char key=(char)cv::waitKey(30);
 		capture.read(frame);
 		cvtColor(frame, img, CV_RGB2GRAY);
 		output.create(img.size().height, img.size().width,CV_8UC1);
@@ -81,6 +80,8 @@ void Viewer::show()
 
 		im->SetDataGpuR(im->GetDataPnt());
 		switch(filtermode){
+		case 'q':
+		case 'Q':
 		case 27:
 				capture.release();
 			//	cvReleaseCapture(&capture2);
@@ -189,10 +190,13 @@ void Viewer::show()
 void Viewer::compute_fps(int cnt)
 {
 	stringstream sstm, sstm2;
+	float avg_fps_val, fps_val;
 	sstm.precision(2);
 	sstm2<<ImageSaveModeTxt[isml];
 	cv::putText(output, sstm2.str(), cv::Point(15, 425), cv::FONT_HERSHEY_COMPLEX, 0.75, cv::Scalar(255),1,CV_AA,false);
-	sstm<<"avg fps "<<cnt*1000.0/difftime(end=clock(),start)*Ttime<<"   fps "<<(1000.0/difftime(end=clock(),time_last_cycle))*Ttime;
+	avg_fps_val = cnt*1000.0/difftime(end=clock(),start)*Ttime;
+	fps_val = (1000.0/difftime(end=clock(),time_last_cycle))*Ttime;
+	sstm<<"avg fps "<<avg_fps_val<<"   fps "<<fps_val;
 	cv::putText(output, sstm.str(), cv::Point(15, 450), cv::FONT_HERSHEY_COMPLEX, 0.75, cv::Scalar(255),1,CV_AA,false);
 	time_last_cycle=end;
 }
