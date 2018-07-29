@@ -7,6 +7,7 @@ make
 
 ### Using CMake
 mkdir build && cd build  
+cmake ..  
 make   
 
 
