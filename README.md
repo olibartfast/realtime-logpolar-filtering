@@ -1,5 +1,5 @@
 ## Dependencies
-OpenCV(tested 3.3.1), CUDA(tested on cuda 9.2)  
+OpenCV(3.3.1), CUDA(cuda 9.2)  
 Tested on Ubuntu 16.04  
 
 
