@@ -1,6 +1,6 @@
-#include "LPBilinearGpuKernel.h"
-#include "LPWilsonGpu.h"		
-#include "LPWilsonGpuKernel.cu"
+#include "LPWilsonGpu.h"
+#include "../include/rtlp/kernels/LPBilinearGpuKernel.h"
+#include "kernels/LPWilsonGpuKernel.cu"
 
 namespace rtlp {
 
@@ -41,13 +41,13 @@ void LPWilsonGpu::create_map(){
  cudaMalloc((void**)&radiusArray_d, R*sizeof(int));
  cudaMalloc((void**)&sigmaArray_d, R*sizeof(float));
 
- radiusKernel<<<R/512+1,512>>>(p0,a,R, radiusArray_d, sigmaArray_d);
+ kernels::radiusKernel<<<R/512+1,512>>>(p0,a,R, radiusArray_d, sigmaArray_d);
 
  cudaMemcpy(&rfMaxRadius,radiusArray_d+(R-1),sizeof(int),cudaMemcpyDeviceToHost);
 
 
 
- createCorticalMapKernel<<<dimCGrid, dimBlock>>>(x0,y0,a,q,p0, xc_d,yc_d,R,S);
+ kernels::createCorticalMapKernel<<<dimCGrid, dimBlock>>>(x0,y0,a,q,p0, xc_d,yc_d,R,S);
 
 
 
@@ -56,7 +56,7 @@ void LPWilsonGpu::create_map(){
   cudaMalloc((void**)&e_d, W*H*sizeof(float));
   cudaMalloc((void**)&n_d, W*H*sizeof(float));
   dim3 dimRGrid(W/dimBlock.x+1, H/dimBlock.y+1);
-  createRetinalMapKernel<<<dimRGrid, dimBlock>>>(x0,y0,a,q,p0,e_d,n_d,W,H);
+  kernels::createRetinalMapKernel<<<dimRGrid, dimBlock>>>(x0,y0,a,q,p0,e_d,n_d,W,H);
  }
 }
 	
@@ -69,17 +69,17 @@ void LPWilsonGpu::to_cortical()
   dim3 dimBlock(BLOCKSZ, BLOCKSZ);
   dim3 dimRSGrid(R/dimBlock.x+1, S/dimBlock.y+1);
  
- interpKernel<<<dimRSGrid, dimBlock>>>(imgfilter->GetGpuCPnt(), xc_d, yc_d, W, H, R, S,true, imgfilter->GetGpuRPnt());
+ kernels::interpKernel<<<dimRSGrid, dimBlock>>>(imgfilter->GetGpuCPnt(), xc_d, yc_d, W, H, R, S,true, imgfilter->GetGpuRPnt());
 
  cudaMalloc((void**)&IMG_d, (W+2*rfMaxRadius+1)*(H+2*rfMaxRadius+1)*sizeof(float));
  dim3 dimBlockIMG(BLOCKSZ,BLOCKSZ);
  dim3 dimGridIMG(W/dimBlockIMG.x+1, H/dimBlockIMG.y+1);
- IMGsetKernel<<<dimGridIMG,dimBlockIMG>>>(IMG_d, imgfilter->GetGpuRPnt(), W,H,rfMaxRadius);
+ kernels::IMGsetKernel<<<dimGridIMG,dimBlockIMG>>>(IMG_d, imgfilter->GetGpuRPnt(), W,H,rfMaxRadius);
 
  dim3 dimGrid(R/dimBlock.x+1, S/dimBlock.y+1);
 
 
- gaussFilterKernel<<<dimGrid, dimBlock>>>(R,S,W,H,rfMaxRadius,uMaxFovea,p0,imgfilter->GetGpuCPnt(),
+ kernels::gaussFilterKernel<<<dimGrid, dimBlock>>>(R,S,W,H,rfMaxRadius,uMaxFovea,p0,imgfilter->GetGpuCPnt(),
 		 	 	 	 	 	 	 	 	 radiusArray_d , sigmaArray_d, xc_d, yc_d, IMG_d);
 
  cudaMemcpy(cort, imgfilter->GetGpuCPnt(), R*S*sizeof(int), cudaMemcpyDeviceToHost);
@@ -97,7 +97,7 @@ void LPWilsonGpu::to_cartesian()
   dim3 dimBlock(BLOCKSZ, BLOCKSZ);
   dim3 dimWHGrid(W/dimBlock.x+1, H/dimBlock.y+1);
  
- interpKernel<<<dimWHGrid, dimBlock>>>(imgfilter->GetGpuRPnt(), e_d, n_d, R, S, W, H,false, imgfilter->GetGpuCPnt());
+ kernels::interpKernel<<<dimWHGrid, dimBlock>>>(imgfilter->GetGpuRPnt(), e_d, n_d, R, S, W, H,false, imgfilter->GetGpuCPnt());
 
  float *NOR_d;
  cudaMalloc((void**)&NOR_d, (H+2*rfMaxRadius+1)*(W+2*rfMaxRadius+1)*sizeof(float));
@@ -107,11 +107,11 @@ void LPWilsonGpu::to_cartesian()
 
  dim3 dimGrid(R/dimBlock.x+1, S/dimBlock.y+1);
 
- antiTransformKernel1<<<dimGrid, dimBlock>>>(R,S,W,H,rfMaxRadius,uMaxFovea,IMG_d,NOR_d,
+ kernels::antiTransformKernel1<<<dimGrid, dimBlock>>>(R,S,W,H,rfMaxRadius,uMaxFovea,IMG_d,NOR_d,
 		 	 	 	 	xc_d, yc_d, radiusArray_d, sigmaArray_d, imgfilter->GetGpuCPnt());
 
  dim3 dimGrid2((W+2*rfMaxRadius+1)/dimBlock.x+1, (H+2*rfMaxRadius+1)/dimBlock.y+1);
- antiTransformKernel2<<<dimGrid2,dimBlock>>>(R,S,W,H,uMaxFovea,rfMaxRadius,imgfilter->GetGpuRPnt(), e_d, radiusArray_d, IMG_d, NOR_d);
+ kernels::antiTransformKernel2<<<dimGrid2,dimBlock>>>(R,S,W,H,uMaxFovea,rfMaxRadius,imgfilter->GetGpuRPnt(), e_d, radiusArray_d, IMG_d, NOR_d);
 
  cudaMemcpy(ret, imgfilter->GetGpuRPnt(), W*H*sizeof(int), cudaMemcpyDeviceToHost);
 

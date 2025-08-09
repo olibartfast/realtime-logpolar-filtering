@@ -12,6 +12,7 @@ set(CMAKE_CUDA_FLAGS_DEBUG "${CMAKE_CUDA_FLAGS_DEBUG} -G")
 # Add include directories
 include_directories(${OpenCV_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # Gather source files
 file(GLOB_RECURSE CPP_SOURCES "src/*.cpp" "src/*.h")
@@ -19,14 +20,19 @@ file(GLOB_RECURSE CUDA_SOURCES "src/*.cu")
 
 # Remove kernel files that are included by other .cu files to avoid multiple definitions
 list(REMOVE_ITEM CUDA_SOURCES 
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/LPBilinearGpuKernel.cu"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/LPWilsonGpuKernel.cu")
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/kernels/LPBilinearGpuKernel.cu"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/kernels/LPWilsonGpuKernel.cu")
 
 message("CPP_SOURCES = ${CPP_SOURCES}")
 message("CUDA_SOURCES = ${CUDA_SOURCES}")
 
 # Create executable
 add_executable(rtlp ${CPP_SOURCES} ${CUDA_SOURCES})
+
+# Add include directories to target
+target_include_directories(rtlp PRIVATE 
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # Enable debug info in device code for debug builds
 target_compile_options(rtlp PRIVATE "$<$<AND:$<CONFIG:Debug>,$<COMPILE_LANGUAGE:CUDA>>:-G;-src-in-ptx>")

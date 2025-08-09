@@ -1,5 +1,5 @@
 #include "LPBilinearGpu.h"
-#include "LPBilinearGpuKernel.cu"
+#include "kernels/LPBilinearGpuKernel.cu"
 
 namespace rtlp {
 
@@ -29,7 +29,7 @@ void LPBilinearGpu::create_map(){
  dim3 dimBlock(BLOCKSZ, BLOCKSZ);
  dim3 dimCGrid(R/dimBlock.x+1, S/dimBlock.y+1);
  
- createCorticalMapKernel<<<dimCGrid, dimBlock>>>(x0,y0,a,q,p0, xc_d,yc_d,R,S);
+ kernels::createCorticalMapKernel<<<dimCGrid, dimBlock>>>(x0,y0,a,q,p0, xc_d,yc_d,R,S);
 
 
 if (inv)
@@ -37,7 +37,7 @@ if (inv)
   cudaMalloc((void**)&e_d, W*H*sizeof(float));
   cudaMalloc((void**)&n_d, W*H*sizeof(float));
   dim3 dimRGrid(W/dimBlock.x+1, H/dimBlock.y+1);
-  createRetinalMapKernel<<<dimRGrid, dimBlock>>>(x0,y0,a,q,p0,e_d,n_d,W,H);
+  kernels::createRetinalMapKernel<<<dimRGrid, dimBlock>>>(x0,y0,a,q,p0,e_d,n_d,W,H);
  }
 }
 
@@ -51,7 +51,7 @@ void LPBilinearGpu::to_cortical(){
   dim3 dimBlock(BLOCKSZ, BLOCKSZ);
   dim3 dimGrid(R/dimBlock.x+1, S/dimBlock.y+1);
  
- interpKernel<<<dimGrid, dimBlock>>>(imgfilter->GetGpuCPnt(), xc_d, yc_d, W, H, R, S,true, imgfilter->GetGpuRPnt());
+ kernels::interpKernel<<<dimGrid, dimBlock>>>(imgfilter->GetGpuCPnt(), xc_d, yc_d, W, H, R, S,true, imgfilter->GetGpuRPnt());
 
  cudaMemcpy(cort, imgfilter->GetGpuCPnt(), R*S*sizeof(int), cudaMemcpyDeviceToHost);
 
@@ -65,7 +65,7 @@ void LPBilinearGpu::to_cartesian(){
   dim3 dimBlock(BLOCKSZ, BLOCKSZ);
   dim3 dimGrid(W/dimBlock.x+1, H/dimBlock.y+1);
  
- interpKernel<<<dimGrid, dimBlock>>>(imgfilter->GetGpuRPnt(), e_d, n_d, R, S, W, H,false, imgfilter->GetGpuCPnt());
+ kernels::interpKernel<<<dimGrid, dimBlock>>>(imgfilter->GetGpuRPnt(), e_d, n_d, R, S, W, H,false, imgfilter->GetGpuCPnt());
 
  cudaMemcpy(ret, imgfilter->GetGpuRPnt(), W*H*sizeof(int), cudaMemcpyDeviceToHost);
 

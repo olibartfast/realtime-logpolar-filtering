@@ -1,4 +1,7 @@
+#include "../../include/rtlp/kernels/LPBilinearGpuKernel.h"
+
 namespace rtlp {
+namespace kernels {
 
 constexpr __device__ float PI = 3.141592653589793f;
 
@@ -100,4 +103,5 @@ if(row<Hout && col<Wout){
 	}
 }
 
+} // namespace kernels
 } // namespace rtlp

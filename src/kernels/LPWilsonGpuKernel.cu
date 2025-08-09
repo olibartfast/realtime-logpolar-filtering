@@ -1,6 +1,7 @@
-#include "LPWilsonGpuKernel.h"
+#include "../../include/rtlp/kernels/LPWilsonGpuKernel.h"
 
 namespace rtlp {
+namespace kernels {
 
 __device__ void kernelMask(int R, int S, int u, int v, float *mask, int rmax, int radius, float x, float y, float sigma)
 {
@@ -114,4 +115,5 @@ __global__ void	antiTransformKernel2(int R, int S, int W,int H,int umaxfidx,int 
 
 }
 
+} // namespace kernels
 } // namespace rtlp
