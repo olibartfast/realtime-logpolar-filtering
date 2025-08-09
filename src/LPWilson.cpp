@@ -7,7 +7,7 @@ LPWilson::LPWilson(Image *i, bool inv):LPBilinear(i,inv){}
 LPWilson::~LPWilson(){
  for(int i=0; i<R*S; i++)
  {
-  if(kernelpnt[i].kernelmatrix!=NULL)
+  if(kernelpnt[i].kernelmatrix != nullptr)
    delete [] kernelpnt[i].kernelmatrix;
   }
  delete [] kernelpnt;
@@ -68,7 +68,7 @@ if(inv)
  }
 }
 for(int i=0; i<R*S; i++)
- kernelpnt[i].kernelmatrix=NULL;
+ kernelpnt[i].kernelmatrix = nullptr;
 int xw,yw;
 for(int v=0; v<S; v++)
  for(int u=umaxfidx; u<R; u++)

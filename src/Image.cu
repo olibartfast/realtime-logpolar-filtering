@@ -6,54 +6,52 @@
 
 namespace rtlp {
 
-Image::Image(){data=NULL;}
+Image::Image() : ret(nullptr), cort(nullptr) {}
 
 
 Image::~Image(){
- delete [] data;
- if(ret!=NULL)
+ // data is automatically cleaned up by unique_ptr
+ if(ret != nullptr)
  cudaFree(ret);
- if(cort!=NULL)
+ if(cort != nullptr)
  cudaFree(cort);
 }
 
 
 void Image::SetData(int Wi,int He){
- if (data!=NULL)	
-  delete [] data;
- data=new int[Wi*He];
-
+ data = std::make_unique<int[]>(Wi*He);
+ W = Wi;
+ H = He;
 }
 
 
 void Image::SetData(int Wi,int He, int* pnt){
- if (data!=NULL)	
- delete [] data;
- W=Wi; H=He;
- data=new int[Wi*He];
+ W = Wi; 
+ H = He;
+ data = std::make_unique<int[]>(Wi*He);
  for(int row=0; row<He; row++)
   for(int col=0; col<Wi; col++)
-   data[row*Wi+col]=pnt[row*Wi+col];
+   data[row*Wi+col] = pnt[row*Wi+col];
 }
 
 
 
 void Image::SetDataGpuR(int *d){
- if(ret!=NULL)
+ if(ret != nullptr)
  cudaFree(ret);
  cudaMalloc((void**)&ret, W*H*sizeof(int));
  cudaMemcpy(ret, d, W*H*sizeof(int), cudaMemcpyHostToDevice);
 }
 
 void Image::SetDataGpuC(int R, int S){
- if(cort!=NULL)
+ if(cort != nullptr)
  cudaFree(cort);
  cudaMalloc((void**)&cort, R*S*sizeof(int));
 }
 
-void Image::ReadData(string nf)
+void Image::ReadData(const std::string& nf)
 {
- cv::Mat img=cv::imread(nf);
+ auto img = cv::imread(nf);
  if (!img.data){ 
   cout<<"Cannot read the image"<<endl;
   return;
@@ -70,7 +68,7 @@ void Image::ReadData(string nf)
  imgR.release();
 }
 
-void Image::WriteData(string nf){
+void Image::WriteData(const std::string& nf) {
  cv::Mat imgW(H,W,CV_8U);
  for(int row=0;row<H;row++)
   for(int col=0;col<W;col++)

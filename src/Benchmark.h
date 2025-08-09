@@ -5,6 +5,7 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include <cuda_runtime.h>
 
 namespace rtlp {
 
@@ -17,16 +18,12 @@ class Benchmark{
 	time_t startCPU, endCPU;
 
 public:
-	Benchmark(Image *img, string image_path = "test.jpg", int iter = 10)
-	{
-	 image=img;
-	 filename=image_path;
-	 iterations=iter;
-	}
-	~Benchmark(){}
+	Benchmark(Image *img, const std::string& image_path = "test.jpg", int iter = 10)
+		: image(img), filename(image_path), iterations(iter) {}
+	~Benchmark() = default;
 	void ReadImg();
 	void Run();
-	void PrintGpuProperties(const struct cudaDeviceProp gpuProp); 
+	void PrintGpuProperties(const cudaDeviceProp& gpuProp); 
 	void SaveImg();
 };
 

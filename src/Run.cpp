@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
         return 0;
     }
     else if (strcmp(argv[1], "--realtime") == 0) {
-        FilterMode filter = FILTER_NONE;
+        FilterMode filter = FilterMode::NONE;
         
         if (argc < 3) {
             cout << "Error: --realtime mode requires a filter argument." << endl;
@@ -56,31 +56,31 @@ int main(int argc, char* argv[])
         
         // Parse filter argument
         if (strcmp(argv[2], "--bilinear") == 0) {
-            filter = FILTER_BILINEAR;
+            filter = FilterMode::BILINEAR;
         }
         else if (strcmp(argv[2], "--bilinear-inv") == 0) {
-            filter = FILTER_BILINEAR_INV;
+            filter = FilterMode::BILINEAR_INV;
         }
         else if (strcmp(argv[2], "--bilinear-gpu") == 0) {
-            filter = FILTER_BILINEAR_GPU;
+            filter = FilterMode::BILINEAR_GPU;
         }
         else if (strcmp(argv[2], "--bilinear-gpu-inv") == 0) {
-            filter = FILTER_BILINEAR_GPU_INV;
+            filter = FilterMode::BILINEAR_GPU_INV;
         }
         else if (strcmp(argv[2], "--wilson") == 0) {
-            filter = FILTER_WILSON;
+            filter = FilterMode::WILSON;
         }
         else if (strcmp(argv[2], "--wilson-inv") == 0) {
-            filter = FILTER_WILSON_INV;
+            filter = FilterMode::WILSON_INV;
         }
         else if (strcmp(argv[2], "--wilson-gpu") == 0) {
-            filter = FILTER_WILSON_GPU;
+            filter = FilterMode::WILSON_GPU;
         }
         else if (strcmp(argv[2], "--wilson-gpu-inv") == 0) {
-            filter = FILTER_WILSON_GPU_INV;
+            filter = FilterMode::WILSON_GPU_INV;
         }
         else if (strcmp(argv[2], "--no-filter") == 0) {
-            filter = FILTER_NONE;
+            filter = FilterMode::NONE;
         }
         else {
             cout << "Error: Unknown filter '" << argv[2] << "'" << endl;

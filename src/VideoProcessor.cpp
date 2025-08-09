@@ -7,7 +7,7 @@
 
 namespace rtlp {
 
-enum ImageSaveModeLabel {
+enum class ImageSaveModeLabel {
 	LP_BIL,
 	LP_BIL_INV,
 	LP_BIL_GPU,
@@ -19,7 +19,7 @@ enum ImageSaveModeLabel {
 	NO_ELAB
 };
 
-enum ImageSaveModeLabel isml;
+ImageSaveModeLabel isml;
 
 static string ImageSaveModeTxt[] = { 
 	"LP Bilinear",
@@ -48,31 +48,31 @@ void VideoProcessor::show()
 	
 	cout << "Starting real-time processing with filter: ";
 	switch(filter_mode) {
-		case FILTER_BILINEAR:
+		case FilterMode::BILINEAR:
 			cout << "LogPolar direct (Bilinear)" << endl;
 			break;
-		case FILTER_BILINEAR_INV:
+		case FilterMode::BILINEAR_INV:
 			cout << "LogPolar direct+inverse (Bilinear)" << endl;
 			break;
-		case FILTER_BILINEAR_GPU:
+		case FilterMode::BILINEAR_GPU:
 			cout << "LogPolar direct (Bilinear GPU)" << endl;
 			break;
-		case FILTER_BILINEAR_GPU_INV:
+		case FilterMode::BILINEAR_GPU_INV:
 			cout << "LogPolar direct+inverse (Bilinear GPU)" << endl;
 			break;
-		case FILTER_WILSON:
+		case FilterMode::WILSON:
 			cout << "LogPolar direct (Wilson)" << endl;
 			break;
-		case FILTER_WILSON_INV:
+		case FilterMode::WILSON_INV:
 			cout << "LogPolar direct+inverse (Wilson)" << endl;
 			break;
-		case FILTER_WILSON_GPU:
+		case FilterMode::WILSON_GPU:
 			cout << "LogPolar direct (Wilson GPU)" << endl;
 			break;
-		case FILTER_WILSON_GPU_INV:
+		case FilterMode::WILSON_GPU_INV:
 			cout << "LogPolar direct+inverse (Wilson GPU)" << endl;
 			break;
-		case FILTER_NONE:
+		case FilterMode::NONE:
 			cout << "No processing (original image)" << endl;
 			break;
 	}
@@ -80,7 +80,7 @@ void VideoProcessor::show()
 	
 	for (;;)
 	{
-		char key=(char)cv::waitKey(30);
+		auto key = static_cast<char>(cv::waitKey(30));
 		capture.read(frame);
 		cvtColor(frame, img, cv::COLOR_BGR2GRAY);
 		output.create(img.size().height, img.size().width,CV_8UC1);
@@ -108,67 +108,67 @@ void VideoProcessor::show()
 		
 		// Apply the selected filter
 		switch(filter_mode){
-		case FILTER_BILINEAR:
+		case FilterMode::BILINEAR:
 				{
 					LPBilinear  lpbdir(im, false);
 					lpbdir.process();
-					isml=LP_BIL;
+					isml = ImageSaveModeLabel::LP_BIL;
 				}
 				break;
 		
-		case FILTER_BILINEAR_INV:
+		case FilterMode::BILINEAR_INV:
 				{
 					LPBilinear  lpbinv(im, true);
 					lpbinv.process();
-					isml=LP_BIL_INV;
+					isml = ImageSaveModeLabel::LP_BIL_INV;
 				}
 				break;
-		case FILTER_BILINEAR_GPU:		
+		case FilterMode::BILINEAR_GPU:		
 				{
 					LPBilinearGpu lpbgpudir(im, false);
 					lpbgpudir.process();
-					isml=LP_BIL_GPU;
+					isml = ImageSaveModeLabel::LP_BIL_GPU;
 				}
 				break;
-		case FILTER_BILINEAR_GPU_INV:
+		case FilterMode::BILINEAR_GPU_INV:
 				{
 					LPBilinearGpu lpbgpuinv(im, true);
 					lpbgpuinv.process();
-					isml=LP_BIL_GPU_INV;
+					isml = ImageSaveModeLabel::LP_BIL_GPU_INV;
 				}
 				break;
 
-		case FILTER_WILSON:
+		case FilterMode::WILSON:
 				{
 					LPWilson  lpwdir(im, false);
 					lpwdir.process();
-					isml=LP_WIL;
+					isml = ImageSaveModeLabel::LP_WIL;
 				}
 				break;
-		case FILTER_WILSON_INV:
+		case FilterMode::WILSON_INV:
 				{
 					LPWilson  lpwinv(im, true);
 					lpwinv.process();
-					isml=LP_WIL_INV;
+					isml = ImageSaveModeLabel::LP_WIL_INV;
 				}
 				break;
-		case FILTER_WILSON_GPU:
+		case FilterMode::WILSON_GPU:
 				{
 					LPWilsonGpu  lpwgpudir(im, false);
 					lpwgpudir.process();
-					isml=LP_WIL_GPU;
+					isml = ImageSaveModeLabel::LP_WIL_GPU;
 				}
 				break;
-		case FILTER_WILSON_GPU_INV:
+		case FilterMode::WILSON_GPU_INV:
 				{
 					LPWilsonGpu  lpwgpuinv(im, true);
 					lpwgpuinv.process();
-					isml=LP_WIL_GPU_INV;
+					isml = ImageSaveModeLabel::LP_WIL_GPU_INV;
 				}
 				break;
-		case FILTER_NONE:
+		case FilterMode::NONE:
 		default:
-				isml=NO_ELAB;
+				isml = ImageSaveModeLabel::NO_ELAB;
 				break;
 		}
 		
@@ -193,7 +193,7 @@ void VideoProcessor::show()
 //		struct tm timeinfo;
 //		localtime_s(&timeinfo, &now);
 //		save_img<<ImageSaveModeTxt[isml]<<ptm->tm_hour<<ptm->tm_min<<ptm->tm_sec<<".jpg";
-		save_img<<ImageSaveModeTxt[isml]<<".jpg";
+		save_img << ImageSaveModeTxt[static_cast<int>(isml)] << ".jpg";
 		im->WriteData(save_img.str());
 	}
 	
@@ -211,7 +211,7 @@ void VideoProcessor::compute_fps(int cnt)
 	stringstream sstm, sstm2;
 	float avg_fps_val, fps_val;
 	sstm.precision(2);
-	sstm2<<ImageSaveModeTxt[isml];
+	sstm2<<ImageSaveModeTxt[static_cast<int>(isml)];
 	cv::putText(output, sstm2.str(), cv::Point(15, 425), cv::FONT_HERSHEY_COMPLEX, 0.75, cv::Scalar(255),1,cv::LINE_AA,false);
 	avg_fps_val = cnt*1000.0/difftime(end=clock(),start)*Ttime;
 	fps_val = (1000.0/difftime(end=clock(),time_last_cycle))*Ttime;

@@ -268,7 +268,7 @@ delete avg;
 }
 
 
-void Benchmark::PrintGpuProperties(const struct cudaDeviceProp gpuProp) {
+void Benchmark::PrintGpuProperties(const cudaDeviceProp& gpuProp) {
   cout<<"GPU Name: "<<gpuProp.name<<endl;
   cout<<"Compute Capability: "<<gpuProp.major<<"."<<gpuProp.minor<<endl;
 

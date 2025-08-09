@@ -10,16 +10,16 @@
 
 namespace rtlp {
 
-enum FilterMode {
-    FILTER_BILINEAR,
-    FILTER_BILINEAR_INV,
-    FILTER_BILINEAR_GPU,
-    FILTER_BILINEAR_GPU_INV,
-    FILTER_WILSON,
-    FILTER_WILSON_INV,
-    FILTER_WILSON_GPU,
-    FILTER_WILSON_GPU_INV,
-    FILTER_NONE
+enum class FilterMode {
+    BILINEAR,
+    BILINEAR_INV,
+    BILINEAR_GPU,
+    BILINEAR_GPU_INV,
+    WILSON,
+    WILSON_INV,
+    WILSON_GPU,
+    WILSON_GPU_INV,
+    NONE
 };
 
 class VideoProcessor{
@@ -32,8 +32,8 @@ class VideoProcessor{
 	FilterMode filter_mode;
 
 public:
-	VideoProcessor(){filter_mode = FILTER_NONE;}
-	~VideoProcessor(){}
+	VideoProcessor() : im(nullptr), fps(0), filter_mode(FilterMode::NONE) {}
+	~VideoProcessor() = default;
 	void show();
 	void SetImage(Image* i);
 	void SetFilter(FilterMode mode);
