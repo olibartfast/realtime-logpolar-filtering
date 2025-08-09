@@ -1,4 +1,4 @@
-#include "Benchmark.h"
+#include "rtlp/benchmark/Benchmark.h"
 #include "rtlp/processing/LPBilinear.h"
 #include "rtlp/processing/LPBilinearGpu.h"
 #include "rtlp/processing/LPWilson.h"
@@ -9,6 +9,7 @@
 #include <iomanip>
 
 namespace rtlp {
+namespace benchmark {
 
 void Benchmark::ReadImg()
 {
@@ -28,51 +29,51 @@ void Benchmark::SaveImg()
 
  
  //--------------------------------------------------------- 
- processing::LPBilinear  lpbdir(image, false);
+ rtlp::processing::LPBilinear  lpbdir(image, false);
  lpbdir.process();
  image->WriteData("2_1_lpbdir.jpg");
 
  //--------------------------------------------------------- 
  image->SetData(tmp->GetW(),tmp->GetH(), tmp->GetDataPnt());
- processing::LPBilinear  lpbinv(image, true);
+ rtlp::processing::LPBilinear  lpbinv(image, true);
  lpbinv.process();
  image->WriteData("2_2_lpbinv.jpg");
 
  //--------------------------------------------------------- 
  image->SetData(tmp->GetW(),tmp->GetH(), tmp->GetDataPnt());
- processing::LPBilinearGpu lpbgpudir(image, false);
+ rtlp::processing::LPBilinearGpu lpbgpudir(image, false);
  lpbgpudir.process();
  image->WriteData("3_1_lpbgpudir.jpg");
 
  //--------------------------------------------------------- 
  image->SetData(tmp->GetW(),tmp->GetH(), tmp->GetDataPnt());
- processing::LPBilinearGpu lpbgpuinv(image, true);
+ rtlp::processing::LPBilinearGpu lpbgpuinv(image, true);
  lpbgpuinv.process();
  image->WriteData("3_2_lpbgpuinv.jpg");
  
  //---------------------------------------------------------
  image->SetData(tmp->GetW(),tmp->GetH(), tmp->GetDataPnt());
- processing::LPWilson  lpwdir(image, false);
+ rtlp::processing::LPWilson  lpwdir(image, false);
  lpwdir.process();
  image->WriteData("4_1_lpwdir.jpg");
  
  //---------------------------------------------------------
  image->SetData(tmp->GetW(),tmp->GetH(), tmp->GetDataPnt());
- processing::LPWilson  lpwinv(image, true);
+ rtlp::processing::LPWilson  lpwinv(image, true);
  lpwinv.process();
  image->WriteData("4_2_lpwinv.jpg");
  
- 
+
 //---------------------------------------------------------
  image->SetData(tmp->GetW(),tmp->GetH(), tmp->GetDataPnt());
- processing::LPWilsonGpu  lpwgpudir(image, false);
+ rtlp::processing::LPWilsonGpu  lpwgpudir(image, false);
  lpwgpudir.process();
  image->WriteData("5_1_lpwgpudir.jpg");
  
- 
+
  //---------------------------------------------------------
  image->SetData(tmp->GetW(),tmp->GetH(), tmp->GetDataPnt());
- processing::LPWilsonGpu  lpwgpuinv(image, true);
+ rtlp::processing::LPWilsonGpu  lpwgpuinv(image, true);
  lpwgpuinv.process();
  image->WriteData("5_2_lpwgpuinv.jpg");
 
@@ -124,7 +125,7 @@ void Benchmark::Run()
 
 
 
- processing::LPBilinear  lpbdir(image, false);
+ rtlp::processing::LPBilinear  lpbdir(image, false);
 
  startCPU=clock();
  lpbdir.process();
@@ -137,7 +138,7 @@ void Benchmark::Run()
  
  //---------------------------------------------------------
  image->SetData(tmp->GetW(),tmp->GetH(), tmp->GetDataPnt());
- processing::LPBilinear  lpbinv(image, true);
+ rtlp::processing::LPBilinear  lpbinv(image, true);
 
  startCPU=clock();
  lpbinv.process();
@@ -152,7 +153,7 @@ void Benchmark::Run()
 
  //---------------------------------------------------------
  image->SetData(tmp->GetW(),tmp->GetH(), tmp->GetDataPnt());
- processing::LPBilinearGpu lpbgpudir(image, false);
+ rtlp::processing::LPBilinearGpu lpbgpudir(image, false);
 
  cudaEventRecord(start, 0);
  lpbgpudir.process();
@@ -168,7 +169,7 @@ void Benchmark::Run()
 
  //--------------------------------------------------------- 
  image->SetData(tmp->GetW(),tmp->GetH(), tmp->GetDataPnt());
- processing::LPBilinearGpu lpbgpuinv(image, true);
+ rtlp::processing::LPBilinearGpu lpbgpuinv(image, true);
 
  cudaEventRecord(start, 0);
  lpbgpuinv.process();
@@ -183,7 +184,7 @@ void Benchmark::Run()
  
  //---------------------------------------------------------
  image->SetData(tmp->GetW(),tmp->GetH(), tmp->GetDataPnt());
- processing::LPWilson  lpwdir(image, false);
+ rtlp::processing::LPWilson  lpwdir(image, false);
 
  startCPU=clock();
  lpwdir.process();
@@ -196,7 +197,7 @@ void Benchmark::Run()
 
  //---------------------------------------------------------
  image->SetData(tmp->GetW(),tmp->GetH(), tmp->GetDataPnt());
- processing::LPWilson  lpwinv(image, true);
+ rtlp::processing::LPWilson  lpwinv(image, true);
 
  startCPU=clock();
  lpwinv.process();
@@ -209,7 +210,7 @@ void Benchmark::Run()
  
 //---------------------------------------------------------
  image->SetData(tmp->GetW(),tmp->GetH(), tmp->GetDataPnt());
- processing::LPWilsonGpu  lpwgpudir(image, false);
+ rtlp::processing::LPWilsonGpu  lpwgpudir(image, false);
 
  startCPU=clock();
  lpwgpudir.process();
@@ -222,7 +223,7 @@ void Benchmark::Run()
 
  //---------------------------------------------------------
  image->SetData(tmp->GetW(),tmp->GetH(), tmp->GetDataPnt());
- processing::LPWilsonGpu  lpwgpuinv(image, true);
+ rtlp::processing::LPWilsonGpu  lpwgpuinv(image, true);
 
  startCPU=clock();
  lpwgpuinv.process();
@@ -242,7 +243,6 @@ void Benchmark::Run()
  
  //---------------------------------------------------------
  }
-
 
 
 
@@ -274,4 +274,5 @@ void Benchmark::PrintGpuProperties(const cudaDeviceProp& gpuProp) {
 
 }
 
+} // namespace benchmark
 } // namespace rtlp

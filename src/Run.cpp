@@ -1,5 +1,5 @@
 #include "rtlp/video/VideoProcessor.h"
-#include "Benchmark.h"
+#include "rtlp/benchmark/Benchmark.h"
 #include <iostream>
 #include <string>
 #include <cstring>
@@ -113,7 +113,7 @@ int main(int argc, char* argv[])
             }
         }
         
-        Benchmark benchmark(&img, image_path, iterations);
+        rtlp::benchmark::Benchmark benchmark(&img, image_path, iterations);
         benchmark.ReadImg();
         benchmark.SaveImg();
         benchmark.Run();

@@ -8,6 +8,7 @@
 #include <cuda_runtime.h>
 
 namespace rtlp {
+namespace benchmark {
 
 class Benchmark{
 	rtlp::core::Image *image;
@@ -27,4 +28,5 @@ public:
 	void SaveImg();
 };
 
+} // namespace benchmark
 } // namespace rtlp
