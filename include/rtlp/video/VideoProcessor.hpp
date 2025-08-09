@@ -31,14 +31,18 @@ class VideoProcessor{
 	time_t start,end, time_last_cycle;
 	int fps;
 	FilterMode filter_mode;
+	cv::VideoWriter video_writer;
+	bool headless_mode;
 
 public:
-	VideoProcessor() : im(nullptr), fps(0), filter_mode(FilterMode::NONE) {}
+	VideoProcessor() : im(nullptr), fps(0), filter_mode(FilterMode::NONE), headless_mode(false) {}
 	~VideoProcessor() = default;
 	void show();
+	void processHeadless(const std::string& input_video, const std::string& output_video, int max_frames = -1);
 	void SetImage(rtlp::core::Image* i);
 	void SetFilter(FilterMode mode);
 	void compute_fps(int cnt);
+	void compute_fps_headless(int cnt, cv::Mat& output_frame);
 
 };
 

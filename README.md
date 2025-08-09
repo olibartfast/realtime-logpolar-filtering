@@ -24,7 +24,17 @@ make -j4
 ./rtlp --realtime [FILTER]
 ```
 
-**Available filters:**
+### Video File Processing
+```bash
+./rtlp --video [FILTER] --input <input_video> [OPTIONS]
+```
+
+**Options:**
+- `--input <path>` - Input video file path (required)
+- `--output <path>` - Output video file path (default: output.mp4)
+- `--frames <n>` - Maximum frames to process (default: all frames)
+
+**Available filters (for both modes):**
 - `--bilinear` - Bilinear interpolation (CPU)
 - `--bilinear-gpu` - Bilinear interpolation (GPU)
 - `--wilson` - Wilson model (CPU)
