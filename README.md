@@ -1,37 +1,105 @@
-## Dependencies
-OpenCV(3.3.1), CUDA(cuda 9.2)  
-Tested on Ubuntu 16.04  
+# Real-time Log-Polar Filtering
 
+GPU-accelerated implementation of log-polar transformations for real-time image processing.
 
-## Compilation
-### Using Makefile
-make
+## Requirements
 
-### Using CMake
-mkdir build && cd build  
-cmake ..  
-make   
+- OpenCV 4.6+
+- CUDA 12.0+
+- CMake 3.20+
+- C++17 compatible compiler
 
+## Build
 
-# Development of a CUDA C++/OpenCV image processing application by  implementing space variant algorithms on GPU
+```bash
+mkdir build && cd build
+cmake ..
+make -j4
+```
 
-Implementation, in CUDA C++ language, of algorithms for webcam signal acquisition and subsequent image processing using space-variant transformations of the visual signal, which allow to vary the image resolution depending on distance from the area of interest, which leads to a reduction in size and consequently a lower computational burden. In order to achieve more significant accelerations in the calculation step, the algorithms, as regards the parallelizable code segments will be executed on GPU (Graphics Process Units), to take advantage of data-parallelism, threads, and instructions provided by this hardware
+## Usage
 
-## Program flow chart
+### Real-time Video Processing
+```bash
+./rtlp --realtime [FILTER]
+```
 
-![Alt Text](./images/program-flowchart.jpg)  
+**Available filters:**
+- `--bilinear` - Bilinear interpolation (CPU)
+- `--bilinear-gpu` - Bilinear interpolation (GPU)
+- `--wilson` - Wilson model (CPU)
+- `--wilson-gpu` - Wilson model (GPU)
+- `--bilinear-inv` - Bilinear with inverse transform
+- `--bilinear-gpu-inv` - GPU bilinear with inverse transform
+- `--wilson-inv` - Wilson with inverse transform
+- `--wilson-gpu-inv` - GPU Wilson with inverse transform
+- `--no-filter` - Original image (no processing)
 
-## Retino-cortical transformation  
+### Benchmark Mode
+```bash
+./rtlp --benchmark [OPTIONS]
+```
 
-![Alt Text](./images/retino-cortical-transformation.png)  
+**Options:**
+- `--image <path>` - Image file path (default: test.jpg)
+- `--iterations <n>` - Number of iterations (default: 10)
 
-## Bilinear interpolation  
+## Project Structure
+
+```
+include/rtlp/
+├── core/           # Image class
+├── video/          # Real-time video processing
+├── processing/     # Log-polar algorithms
+├── benchmark/      # Performance benchmarking
+└── kernels/        # CUDA kernels
+
+src/
+├── core/           # Image implementation
+├── video/          # VideoProcessor implementation
+├── processing/     # Algorithm implementations
+├── benchmark/      # Benchmark implementation
+└── kernels/        # CUDA kernel implementations
+```
+
+## Algorithms
+
+### Retino-cortical Transformation
+![Alt Text](./images/retino-cortical-transformation.png)
+
+### Bilinear Interpolation
+Fast log-polar transformation using bilinear interpolation.
 
 ![Alt Text](./images/bilinear-interpolation.png)
 
-## Wilson model  
+### Wilson Model
+Space-variant transformation based on the Wilson cortical model.
+
 ![Alt Text](./images/wilson-model.png)
 
-2013 Slide presentation:  https://goo.gl/A3jhGG
+Both algorithms support:
+- Forward transformation (Cartesian → Log-polar)
+- Inverse transformation (Log-polar → Cartesian)
+- CPU and GPU implementations
 
-Demo on youtube: https://www.youtube.com/watch?v=m43EsVtOzXA
+## Performance
+
+GPU implementations provide significant speedup over CPU versions:
+- Bilinear GPU: ~22-25x speedup
+- Wilson GPU: ~42-57x speedup
+
+### Test Configuration
+- **GPU**: NVIDIA GeForce RTX 3060 Laptop GPU (Compute Capability 8.6)
+- **CPU**: Intel Core i5-11400H @ 2.70GHz (6 cores, 12 threads)
+- **OS**: Ubuntu 24.04 
+- **Test Image**: 3818x2540 pixels (data/test.jpg)
+
+### Benchmark Results (1 iteration)
+| Algorithm | CPU Time (ms) | GPU Time (ms) | Speedup |
+|-----------|---------------|---------------|---------|
+| Bilinear Direct | 87.57 | 3.97 | 22.05x |
+| Bilinear Inverse | 815.47 | 32.29 | 25.26x |
+| Wilson Direct | 510.40 | 8.98 | 56.82x |
+| Wilson Inverse | 1851.06 | 44.50 | 41.60x |
+
+Results vary based on image size and hardware configuration.
