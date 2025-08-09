@@ -221,18 +221,30 @@ void VideoProcessor::compute_fps(int cnt)
 	time_last_cycle=end;
 }
 
-void VideoProcessor::compute_fps_headless(int cnt, cv::Mat& output_frame)
+void VideoProcessor::compute_timing_headless(int cnt, cv::Mat& output_frame)
 {
 	stringstream sstm, sstm2;
-	float avg_fps_val, fps_val;
-	sstm.precision(2);
+	double moving_avg_ms = 0.0;
+	
+	// Add current timing to window
+	timing_window.push_back(last_process_time_ms);
+	
+	// Keep window size limited
+	if (timing_window.size() > MOVING_AVG_WINDOW) {
+		timing_window.erase(timing_window.begin());
+	}
+	
+	// Calculate moving average
+	for (double time : timing_window) {
+		moving_avg_ms += time;
+	}
+	moving_avg_ms /= timing_window.size();
+	
+	sstm.precision(3);
 	sstm2<<ImageSaveModeTxt[static_cast<int>(isml)];
 	cv::putText(output_frame, sstm2.str(), cv::Point(15, 25), cv::FONT_HERSHEY_COMPLEX, 0.75, cv::Scalar(255),1,cv::LINE_AA,false);
-	avg_fps_val = cnt*1000.0/difftime(end=clock(),start)*Ttime;
-	fps_val = (1000.0/difftime(end=clock(),time_last_cycle))*Ttime;
-	sstm<<"avg fps "<<avg_fps_val<<"   fps "<<fps_val;
+	sstm<<"frame "<<last_process_time_ms<<" ms   moving avg "<<moving_avg_ms<<" ms";
 	cv::putText(output_frame, sstm.str(), cv::Point(15, 50), cv::FONT_HERSHEY_COMPLEX, 0.75, cv::Scalar(255),1,cv::LINE_AA,false);
-	time_last_cycle=end;
 }
 
 void VideoProcessor::processHeadless(const std::string& input_video, const std::string& output_video, int max_frames)
@@ -267,6 +279,7 @@ void VideoProcessor::processHeadless(const std::string& input_video, const std::
 	start = clock();
 	int counter = 0;
 	int frames_to_process = (max_frames > 0) ? min(max_frames, total_frames) : total_frames;
+	timing_window.clear();
 
 	cout << "Starting headless processing with filter: ";
 	switch(filter_mode) {
@@ -319,6 +332,9 @@ void VideoProcessor::processHeadless(const std::string& input_video, const std::
 		}
 
 		im->SetDataGpuR(im->GetDataPnt());
+		
+		// Start timing the processing pipeline
+		process_start = std::chrono::steady_clock::now();
 		
 		// Apply the selected filter
 		switch(filter_mode){
@@ -391,8 +407,13 @@ void VideoProcessor::processHeadless(const std::string& input_video, const std::
 				(output.data+row*output.size().width)[col]=im->GetDataPnt()[row*im->GetW()+col];
 			}
 		}
+		
+		// End timing the processing pipeline
+		process_end = std::chrono::steady_clock::now();
+		auto diff = process_end - process_start;
+		last_process_time_ms = std::chrono::duration<double, std::milli>(diff).count();
 
-		compute_fps_headless(++counter, output);
+		compute_timing_headless(++counter, output);
 		
 		// Write frame to output video
 		video_writer.write(output);
