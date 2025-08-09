@@ -10,10 +10,10 @@ class LogPolar{
 protected:
  Image *imgfilter;
  int W,H;
- float p, o; // rho e theta
- float p0; //raggio minimo
+ float p, o; // rho and theta
+ float p0; //minimum radius
  float pmax,a,q;
- int R, S; //dimensioni dell'immagine logpolare R (colonna) S (riga)
+ int R, S; //log-polar image dimensions R (column) S (row)
  int x0,y0;
  bool inv;
 

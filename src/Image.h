@@ -24,7 +24,7 @@ namespace rtlp {
 
 class Image{
 private:
- int W, H; //width->num. colonne, height->num. righe
+ int W, H; //width->num. columns, height->num. rows
  int* data;
  int* ret;
  int* cort;
@@ -33,7 +33,7 @@ private:
 public:
  Image();
  ~Image();
- // Array Dati Input
+ // Input Data Array
  inline void SetW(int width){W=width;}
  inline void SetH(int height){H=height;}
  inline void Set(int c, int r, int val){data[r*W+c]=val;}

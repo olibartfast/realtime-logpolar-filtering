@@ -22,15 +22,15 @@ enum ImageSaveModeLabel {
 enum ImageSaveModeLabel isml;
 
 static string ImageSaveModeTxt[] = { 
-	"LP Bilineare",
-	"LP Bilineare inverso",
-	"LP Bilineare Gpu dir",
-	"LP Bilineare Gpu inverso",
+	"LP Bilinear",
+	"LP Bilinear inverse",
+	"LP Bilinear GPU direct",
+	"LP Bilinear GPU inverse",
 	"LP Wilson",
-	"LP Wilson inverso",
-	"LP Wilson Gpu",
-	"LP Wilson Gpu inverso",
-	"Immagine non elaborata"
+	"LP Wilson inverse",
+	"LP Wilson GPU",
+	"LP Wilson GPU inverse",
+	"Image not processed"
 };
 
 

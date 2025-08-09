@@ -29,7 +29,7 @@ void LPBilinear::create_map(){
 		for (int u=0; u<R; u++) 
 		{
 			pc=(p0*pow(a,u));
-			//coordinata cartesiana del campo recettivo
+			//cartesian coordinate of the receptive field
 			yc[v*R+u]=pc*sin((oc))+y0;
 			xc[v*R+u]=pc*cos((oc))+x0;
 

@@ -8,10 +8,10 @@ LogPolar::LogPolar(Image *i, bool inv){
  W=i->GetW(); H=i->GetH();
  R=W/4;
 
-//Per visualizzazione con la webcam il paramentro S (rappresentato sull'asse delle ordinate ) 
-//non deve essere impostato ad un valore maggiore di quello massimo supportato dalla webcam
-//(in questo caso 480 pixel)
- y0=H/2-1,x0=W/2-1; //posizione del centro
+//For webcam visualization the parameter S (represented on the ordinate axis) 
+//must not be set to a value greater than the maximum supported by the webcam
+//(in this case 480 pixels)
+ y0=H/2-1,x0=W/2-1; //center position
  p0=1;
  pmax=0.5*(min(W,H));
  a=exp(log(pmax/p0)/(float)R);

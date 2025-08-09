@@ -43,8 +43,8 @@ __global__ void radiusKernel(float p0,float a, int R, int *radiusArray_d, float 
 __global__ void gaussFilterKernel(int R,int S, int W, int H, int rmax, int umaxfidx, float p0, int *cort,
 	int *pradius, float *psigma, float *x, float *y, float *IMG)
 {
- int u=blockIdx.x*blockDim.x+threadIdx.x; //u ---> indice colonne
- int v=blockIdx.y*blockDim.y+threadIdx.y; //v ---> indice righe
+ int u=blockIdx.x*blockDim.x+threadIdx.x; //u ---> column index
+ int v=blockIdx.y*blockDim.y+threadIdx.y; //v ---> row index
  int xw,yw;
  float w[32];
  if(u>=umaxfidx && u<R && v<S)
@@ -73,8 +73,8 @@ __global__ void antiTransformKernel1(int R,int S, int W, int H, int rmax, int um
 
 {
  float w[32];
- int u=blockIdx.x*blockDim.x+threadIdx.x; //u ---> indice colonne
- int v=blockIdx.y*blockDim.y+threadIdx.y; //v ---> indice righe
+ int u=blockIdx.x*blockDim.x+threadIdx.x; //u ---> column index
+ int v=blockIdx.y*blockDim.y+threadIdx.y; //v ---> row index
  if(u<umaxfidx || u>=R || v>=S)
   return;
  int xw=floor(x[v*R+u]);
@@ -102,8 +102,8 @@ __global__ void antiTransformKernel1(int R,int S, int W, int H, int rmax, int um
 __global__ void	antiTransformKernel2(int R, int S, int W,int H,int umaxfidx,int rmax,int *ret,
 										float *e,  int *pradius, float *IMG, float *NOR)
 {
- int i=blockIdx.x*blockDim.x+threadIdx.x; //i ---> indice colonne
- int j=blockIdx.y*blockDim.y+threadIdx.y; //j ---> indice righe
+ int i=blockIdx.x*blockDim.x+threadIdx.x; //i ---> column index
+ int j=blockIdx.y*blockDim.y+threadIdx.y; //j ---> row index
  if (j<rmax || j>=H+rmax  || i<rmax || i>=W+rmax)
   return;
  int idx=j*(W+2*rmax+1)+i;

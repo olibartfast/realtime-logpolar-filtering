@@ -24,7 +24,7 @@ void Benchmark::SaveImg()
  Image *tmp=new Image();
  tmp->SetData(image->GetW(),image->GetH(), image->GetDataPnt());
 
- image->WriteData("1_nonelaborata.jpg");
+ image->WriteData("1_unprocessed.jpg");
 
  
  //--------------------------------------------------------- 

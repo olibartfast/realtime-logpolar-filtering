@@ -2,7 +2,7 @@
 
 namespace rtlp {
 
-//Costruttore e distruttore
+//Constructor and destructor
 LPWilson::LPWilson(Image *i, bool inv):LPBilinear(i,inv){}
 LPWilson::~LPWilson(){
  for(int i=0; i<R*S; i++)
@@ -13,7 +13,7 @@ LPWilson::~LPWilson(){
  delete [] kernelpnt;
 }
 
-//Metodo che lancia l'elaborazione dell'immagine
+//Method that launches image processing
 void LPWilson::process()
 {
  create_map();
@@ -22,7 +22,7 @@ void LPWilson::process()
   to_cartesian();
 }
 
-//Creazione delle mappe
+//Map creation
 void LPWilson::create_map(){
  float pc, oc;
  kernelpnt=new kernel[R*S];
@@ -43,7 +43,7 @@ void LPWilson::create_map(){
    pc=(p0*pow(a,u));
    kernelpnt[v*R+u].radius=0;
    oc=((float)(v)/q);
-   //Coordinata cartesiana del campo recettivo
+   //Cartesian coordinate of the receptive field
    yc[v*R+u]=pc*sin((oc))+y0;
    xc[v*R+u]=pc*cos((oc))+x0;
   }
@@ -93,7 +93,7 @@ for(int v=0; v<S; v++)
  }
 }
 
-//Passaggio nel piano corticale
+//Passage to the cortical plane
 void LPWilson::to_cortical(){
  int *cort=new int[S*R];
  for (int j=0; j<(S*R); j++)
@@ -129,7 +129,7 @@ void LPWilson::to_cortical(){
  delete [] IMG;
 }
 
-//Antitrasformazione per il passaggio nel piano cartesiano
+//Inverse transformation for passage to the cartesian plane
 void LPWilson::to_cartesian(){
  int *ret= new int [W*H];
  for (int j=0; j<(W*H); j++)

@@ -14,7 +14,7 @@ __global__ void createCorticalMapKernel(int x0, int y0, float a, float q, float 
 			float pc, oc;
             pc=(p0*pow(a,u));
 			oc=((float)(v)/q);
-			//coordinata cartesiana del campo recettivo
+			//cartesian coordinate of the receptive field
 			yc[v*R+u]=pc*sin((oc))+y0;
 			xc[v*R+u]=pc*cos((oc))+x0;
 		}

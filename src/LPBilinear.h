@@ -6,8 +6,8 @@ namespace rtlp {
 
 class LPBilinear : public LogPolar{
 protected:
-	float *e, *n; // epsilon (idx colonna) e eta (idx riga)
-	float  *xc, *yc; //coordinate cartesiane x (idx colonna) e y (idx riga)
+	float *e, *n; // epsilon (column idx) and eta (row idx)
+	float  *xc, *yc; //cartesian coordinates x (column idx) and y (row idx)
 public:
 	LPBilinear(Image *i, bool inv);
 	~LPBilinear();
