@@ -9,6 +9,7 @@
 #include <opencv2/videoio.hpp>
 
 namespace rtlp {
+namespace video {
 
 enum class FilterMode {
     BILINEAR,
@@ -41,4 +42,5 @@ public:
 
 };
 
+} // namespace video
 } // namespace rtlp

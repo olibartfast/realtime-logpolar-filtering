@@ -1,4 +1,4 @@
-#include "VideoProcessor.h"
+#include "rtlp/video/VideoProcessor.h"
 #include "Benchmark.h"
 #include <iostream>
 #include <string>
@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
         return 0;
     }
     else if (strcmp(argv[1], "--realtime") == 0) {
-        FilterMode filter = FilterMode::NONE;
+        rtlp::video::FilterMode filter = rtlp::video::FilterMode::NONE;
         
         if (argc < 3) {
             cout << "Error: --realtime mode requires a filter argument." << endl;
@@ -56,31 +56,31 @@ int main(int argc, char* argv[])
         
         // Parse filter argument
         if (strcmp(argv[2], "--bilinear") == 0) {
-            filter = FilterMode::BILINEAR;
+            filter = rtlp::video::FilterMode::BILINEAR;
         }
         else if (strcmp(argv[2], "--bilinear-inv") == 0) {
-            filter = FilterMode::BILINEAR_INV;
+            filter = rtlp::video::FilterMode::BILINEAR_INV;
         }
         else if (strcmp(argv[2], "--bilinear-gpu") == 0) {
-            filter = FilterMode::BILINEAR_GPU;
+            filter = rtlp::video::FilterMode::BILINEAR_GPU;
         }
         else if (strcmp(argv[2], "--bilinear-gpu-inv") == 0) {
-            filter = FilterMode::BILINEAR_GPU_INV;
+            filter = rtlp::video::FilterMode::BILINEAR_GPU_INV;
         }
         else if (strcmp(argv[2], "--wilson") == 0) {
-            filter = FilterMode::WILSON;
+            filter = rtlp::video::FilterMode::WILSON;
         }
         else if (strcmp(argv[2], "--wilson-inv") == 0) {
-            filter = FilterMode::WILSON_INV;
+            filter = rtlp::video::FilterMode::WILSON_INV;
         }
         else if (strcmp(argv[2], "--wilson-gpu") == 0) {
-            filter = FilterMode::WILSON_GPU;
+            filter = rtlp::video::FilterMode::WILSON_GPU;
         }
         else if (strcmp(argv[2], "--wilson-gpu-inv") == 0) {
-            filter = FilterMode::WILSON_GPU_INV;
+            filter = rtlp::video::FilterMode::WILSON_GPU_INV;
         }
         else if (strcmp(argv[2], "--no-filter") == 0) {
-            filter = FilterMode::NONE;
+            filter = rtlp::video::FilterMode::NONE;
         }
         else {
             cout << "Error: Unknown filter '" << argv[2] << "'" << endl;
@@ -88,7 +88,7 @@ int main(int argc, char* argv[])
             return 1;
         }
         
-        VideoProcessor processor;
+        rtlp::video::VideoProcessor processor;
         processor.SetImage(&img);
         processor.SetFilter(filter);
         processor.show();

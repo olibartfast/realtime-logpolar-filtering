@@ -1,4 +1,4 @@
-#include "VideoProcessor.h"
+#include "rtlp/video/VideoProcessor.h"
 
 #include "rtlp/processing/LPBilinear.h"
 #include "rtlp/processing/LPBilinearGpu.h"
@@ -6,6 +6,7 @@
 #include "rtlp/processing/LPWilsonGpu.h"
 
 namespace rtlp {
+namespace video {
 
 enum class ImageSaveModeLabel {
 	LP_BIL,
@@ -110,7 +111,7 @@ void VideoProcessor::show()
 		switch(filter_mode){
 		case FilterMode::BILINEAR:
 				{
-					processing::LPBilinear  lpbdir(im, false);
+					rtlp::processing::LPBilinear  lpbdir(im, false);
 					lpbdir.process();
 					isml = ImageSaveModeLabel::LP_BIL;
 				}
@@ -118,21 +119,21 @@ void VideoProcessor::show()
 		
 		case FilterMode::BILINEAR_INV:
 				{
-					processing::LPBilinear  lpbinv(im, true);
+					rtlp::processing::LPBilinear  lpbinv(im, true);
 					lpbinv.process();
 					isml = ImageSaveModeLabel::LP_BIL_INV;
 				}
 				break;
 		case FilterMode::BILINEAR_GPU:		
 				{
-					processing::LPBilinearGpu lpbgpudir(im, false);
+					rtlp::processing::LPBilinearGpu lpbgpudir(im, false);
 					lpbgpudir.process();
 					isml = ImageSaveModeLabel::LP_BIL_GPU;
 				}
 				break;
 		case FilterMode::BILINEAR_GPU_INV:
 				{
-					processing::LPBilinearGpu lpbgpuinv(im, true);
+					rtlp::processing::LPBilinearGpu lpbgpuinv(im, true);
 					lpbgpuinv.process();
 					isml = ImageSaveModeLabel::LP_BIL_GPU_INV;
 				}
@@ -140,28 +141,28 @@ void VideoProcessor::show()
 
 		case FilterMode::WILSON:
 				{
-					processing::LPWilson  lpwdir(im, false);
+					rtlp::processing::LPWilson  lpwdir(im, false);
 					lpwdir.process();
 					isml = ImageSaveModeLabel::LP_WIL;
 				}
 				break;
 		case FilterMode::WILSON_INV:
 				{
-					processing::LPWilson  lpwinv(im, true);
+					rtlp::processing::LPWilson  lpwinv(im, true);
 					lpwinv.process();
 					isml = ImageSaveModeLabel::LP_WIL_INV;
 				}
 				break;
 		case FilterMode::WILSON_GPU:
 				{
-					processing::LPWilsonGpu  lpwgpudir(im, false);
+					rtlp::processing::LPWilsonGpu  lpwgpudir(im, false);
 					lpwgpudir.process();
 					isml = ImageSaveModeLabel::LP_WIL_GPU;
 				}
 				break;
 		case FilterMode::WILSON_GPU_INV:
 				{
-					processing::LPWilsonGpu  lpwgpuinv(im, true);
+					rtlp::processing::LPWilsonGpu  lpwgpuinv(im, true);
 					lpwgpuinv.process();
 					isml = ImageSaveModeLabel::LP_WIL_GPU_INV;
 				}
@@ -199,7 +200,7 @@ void VideoProcessor::show()
 	
 
 	}
-			
+		
 	img.release();
 	output.release();
 	frame.release();
@@ -220,5 +221,5 @@ void VideoProcessor::compute_fps(int cnt)
 	time_last_cycle=end;
 }
 
+} // namespace video
 } // namespace rtlp
-
