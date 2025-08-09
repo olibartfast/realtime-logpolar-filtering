@@ -1,34 +1,130 @@
 #include "Viewer.h"
 #include "Benchmark.h"
+#include <iostream>
+#include <string>
+#include <cstring>
 
-int main()
-{
-system(CLRSCR);
-cout<<"1. Elabora in real time"<<endl;
-cout<<"2. Benchmark del programma"<<endl;
-Image img;
-int x;
-cin>>x;
-switch(x)
-{
-  case 1:
-	{
-	Viewer view;
-	view.SetImage(&img);
-	view.show();
-	}
-	break;
-  case 2:
-	{
-	Benchmark benchmark(&img);
-	benchmark.ReadImg();
-	benchmark.SaveImg();
-	benchmark.Run();
-	}
-	break;
+using namespace std;
+using namespace rtlp;
+
+void print_help() {
+    cout << "Usage: ./program [MODE] [FILTER] [OPTIONS]" << endl << endl;
+    cout << "MODES:" << endl;
+    cout << "  --realtime    Process video in real-time" << endl;
+    cout << "  --benchmark   Run benchmark tests" << endl << endl;
+    cout << "FILTERS (only for --realtime mode):" << endl;
+    cout << "  --bilinear         LogPolar direct (Bilinear)" << endl;
+    cout << "  --bilinear-inv     LogPolar direct+inverse (Bilinear)" << endl;
+    cout << "  --bilinear-gpu     LogPolar direct (Bilinear GPU)" << endl;
+    cout << "  --bilinear-gpu-inv LogPolar direct+inverse (Bilinear GPU)" << endl;
+    cout << "  --wilson           LogPolar direct (Wilson)" << endl;
+    cout << "  --wilson-inv       LogPolar direct+inverse (Wilson)" << endl;
+    cout << "  --wilson-gpu       LogPolar direct (Wilson GPU)" << endl;
+    cout << "  --wilson-gpu-inv   LogPolar direct+inverse (Wilson GPU)" << endl;
+    cout << "  --no-filter        Show original image (no processing)" << endl << endl;
+    cout << "BENCHMARK OPTIONS:" << endl;
+    cout << "  --image <path>     Image file path (default: test.jpg)" << endl;
+    cout << "  --iterations <n>   Number of benchmark iterations (default: 10)" << endl << endl;
+    cout << "Examples:" << endl;
+    cout << "  ./program --realtime --bilinear" << endl;
+    cout << "  ./program --benchmark" << endl;
+    cout << "  ./program --benchmark --image myimage.jpg --iterations 50" << endl;
+    cout << "  ./program --help" << endl;
 }
 
-return 0;
+int main(int argc, char* argv[])
+{
+    if (argc < 2) {
+        print_help();
+        return 1;
+    }
+
+    Image img;
+    
+    if (strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0) {
+        print_help();
+        return 0;
+    }
+    else if (strcmp(argv[1], "--realtime") == 0) {
+        FilterMode filter = FILTER_NONE;
+        
+        if (argc < 3) {
+            cout << "Error: --realtime mode requires a filter argument." << endl;
+            print_help();
+            return 1;
+        }
+        
+        // Parse filter argument
+        if (strcmp(argv[2], "--bilinear") == 0) {
+            filter = FILTER_BILINEAR;
+        }
+        else if (strcmp(argv[2], "--bilinear-inv") == 0) {
+            filter = FILTER_BILINEAR_INV;
+        }
+        else if (strcmp(argv[2], "--bilinear-gpu") == 0) {
+            filter = FILTER_BILINEAR_GPU;
+        }
+        else if (strcmp(argv[2], "--bilinear-gpu-inv") == 0) {
+            filter = FILTER_BILINEAR_GPU_INV;
+        }
+        else if (strcmp(argv[2], "--wilson") == 0) {
+            filter = FILTER_WILSON;
+        }
+        else if (strcmp(argv[2], "--wilson-inv") == 0) {
+            filter = FILTER_WILSON_INV;
+        }
+        else if (strcmp(argv[2], "--wilson-gpu") == 0) {
+            filter = FILTER_WILSON_GPU;
+        }
+        else if (strcmp(argv[2], "--wilson-gpu-inv") == 0) {
+            filter = FILTER_WILSON_GPU_INV;
+        }
+        else if (strcmp(argv[2], "--no-filter") == 0) {
+            filter = FILTER_NONE;
+        }
+        else {
+            cout << "Error: Unknown filter '" << argv[2] << "'" << endl;
+            print_help();
+            return 1;
+        }
+        
+        Viewer view;
+        view.SetImage(&img);
+        view.SetFilter(filter);
+        view.show();
+    }
+    else if (strcmp(argv[1], "--benchmark") == 0) {
+        string image_path = "test.jpg";
+        int iterations = 10;
+        
+        // Parse optional benchmark arguments
+        for (int i = 2; i < argc; i++) {
+            if (strcmp(argv[i], "--image") == 0 && i + 1 < argc) {
+                image_path = argv[i + 1];
+                i++; // Skip the next argument as it's the image path
+            }
+            else if (strcmp(argv[i], "--iterations") == 0 && i + 1 < argc) {
+                iterations = atoi(argv[i + 1]);
+                if (iterations <= 0) {
+                    cout << "Error: iterations must be a positive number" << endl;
+                    return 1;
+                }
+                i++; // Skip the next argument as it's the iteration count
+            }
+        }
+        
+        Benchmark benchmark(&img, image_path, iterations);
+        benchmark.ReadImg();
+        benchmark.SaveImg();
+        benchmark.Run();
+    }
+    else {
+        cout << "Error: Unknown mode '" << argv[1] << "'" << endl;
+        print_help();
+        return 1;
+    }
+
+    return 0;
 }
 
 

@@ -1,7 +1,8 @@
-#ifndef LPWILSONGPU_H
-#define LPWILSONGPU_H
+#pragma once
 
 #include "LPBilinearGpu.h"
+
+namespace rtlp {
 
 class LPWilsonGpu : public LPBilinearGpu{
  int *radiusArray_d;
@@ -19,4 +20,5 @@ class LPWilsonGpu : public LPBilinearGpu{
   void to_cartesian();
   void process();
 };
-#endif
+
+} // namespace rtlp

@@ -1,7 +1,8 @@
-#ifndef LPWILSON_H
-#define LPWILSON_H
+#pragma once
 
 #include "LPBilinear.h"
+
+namespace rtlp {
 
 struct kernel { float *kernelmatrix; int radius;};
 
@@ -21,4 +22,5 @@ public:
 
 
 };
-#endif
+
+} // namespace rtlp

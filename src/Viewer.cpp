@@ -5,8 +5,7 @@
 #include "LPWilson.h"
 #include "LPWilsonGpu.h"
 
-
-
+namespace rtlp {
 
 enum ImageSaveModeLabel {
 	LP_BIL,
@@ -36,37 +35,58 @@ static string ImageSaveModeTxt[] = {
 
 
 
-void menu_elab();
-
-void benchmark();
-
-
 void Viewer::SetImage(Image* i) {im = i;}
+
+void Viewer::SetFilter(FilterMode mode) {filter_mode = mode;}
 
 
 void Viewer::show()
 {
-	
-	menu_elab();
 	cv::VideoCapture capture(0);
 	start=clock();
 	int counter=0;
-	char filtermode = 0;
+	
+	cout << "Starting real-time processing with filter: ";
+	switch(filter_mode) {
+		case FILTER_BILINEAR:
+			cout << "LogPolar direct (Bilinear)" << endl;
+			break;
+		case FILTER_BILINEAR_INV:
+			cout << "LogPolar direct+inverse (Bilinear)" << endl;
+			break;
+		case FILTER_BILINEAR_GPU:
+			cout << "LogPolar direct (Bilinear GPU)" << endl;
+			break;
+		case FILTER_BILINEAR_GPU_INV:
+			cout << "LogPolar direct+inverse (Bilinear GPU)" << endl;
+			break;
+		case FILTER_WILSON:
+			cout << "LogPolar direct (Wilson)" << endl;
+			break;
+		case FILTER_WILSON_INV:
+			cout << "LogPolar direct+inverse (Wilson)" << endl;
+			break;
+		case FILTER_WILSON_GPU:
+			cout << "LogPolar direct (Wilson GPU)" << endl;
+			break;
+		case FILTER_WILSON_GPU_INV:
+			cout << "LogPolar direct+inverse (Wilson GPU)" << endl;
+			break;
+		case FILTER_NONE:
+			cout << "No processing (original image)" << endl;
+			break;
+	}
+	cout << "Press 's' to save current frame, 'q' or ESC to exit" << endl;
+	
 	for (;;)
 	{
 		char key=(char)cv::waitKey(30);
 		capture.read(frame);
-		cvtColor(frame, img, CV_RGB2GRAY);
+		cvtColor(frame, img, cv::COLOR_BGR2GRAY);
 		output.create(img.size().height, img.size().width,CV_8UC1);
 		im->SetH(img.size().height);
 		im->SetW(img.size().width);
 		im->SetData(img.size().width, img.size().height);
-		if (key!=-1 && key!='s')
-			{
-				filtermode=key;
-				counter=0;
-				start=clock();
-			}
 
 		for(int row=0;row<img.size().height;row++)
 		{
@@ -79,16 +99,16 @@ void Viewer::show()
 		}
 
 		im->SetDataGpuR(im->GetDataPnt());
-		switch(filtermode){
-		case 'q':
-		case 'Q':
-		case 27:
-				capture.release();
-			//	cvReleaseCapture(&capture2);
-				exit(1);
-				break;
-
-		case 'a':
+		
+		// Check for exit conditions
+		if (key == 'q' || key == 'Q' || key == 27) {
+			capture.release();
+			exit(1);
+		}
+		
+		// Apply the selected filter
+		switch(filter_mode){
+		case FILTER_BILINEAR:
 				{
 					LPBilinear  lpbdir(im, false);
 					lpbdir.process();
@@ -96,21 +116,21 @@ void Viewer::show()
 				}
 				break;
 		
-		case 'b':
+		case FILTER_BILINEAR_INV:
 				{
 					LPBilinear  lpbinv(im, true);
 					lpbinv.process();
 					isml=LP_BIL_INV;
 				}
 				break;
-		case 'c':		
+		case FILTER_BILINEAR_GPU:		
 				{
 					LPBilinearGpu lpbgpudir(im, false);
 					lpbgpudir.process();
 					isml=LP_BIL_GPU;
 				}
 				break;
-		case 'd':
+		case FILTER_BILINEAR_GPU_INV:
 				{
 					LPBilinearGpu lpbgpuinv(im, true);
 					lpbgpuinv.process();
@@ -118,36 +138,35 @@ void Viewer::show()
 				}
 				break;
 
-		case 'i':
+		case FILTER_WILSON:
 				{
 					LPWilson  lpwdir(im, false);
 					lpwdir.process();
 					isml=LP_WIL;
 				}
 				break;
-		case 'j':
-			
+		case FILTER_WILSON_INV:
 				{
 					LPWilson  lpwinv(im, true);
 					lpwinv.process();
 					isml=LP_WIL_INV;
 				}
 				break;
-		case 'k':
+		case FILTER_WILSON_GPU:
 				{
 					LPWilsonGpu  lpwgpudir(im, false);
 					lpwgpudir.process();
 					isml=LP_WIL_GPU;
 				}
 				break;
-		case 'l':
-			
+		case FILTER_WILSON_GPU_INV:
 				{
 					LPWilsonGpu  lpwgpuinv(im, true);
 					lpwgpuinv.process();
 					isml=LP_WIL_GPU_INV;
 				}
 				break;
+		case FILTER_NONE:
 		default:
 				isml=NO_ELAB;
 				break;
@@ -193,32 +212,13 @@ void Viewer::compute_fps(int cnt)
 	float avg_fps_val, fps_val;
 	sstm.precision(2);
 	sstm2<<ImageSaveModeTxt[isml];
-	cv::putText(output, sstm2.str(), cv::Point(15, 425), cv::FONT_HERSHEY_COMPLEX, 0.75, cv::Scalar(255),1,CV_AA,false);
+	cv::putText(output, sstm2.str(), cv::Point(15, 425), cv::FONT_HERSHEY_COMPLEX, 0.75, cv::Scalar(255),1,cv::LINE_AA,false);
 	avg_fps_val = cnt*1000.0/difftime(end=clock(),start)*Ttime;
 	fps_val = (1000.0/difftime(end=clock(),time_last_cycle))*Ttime;
 	sstm<<"avg fps "<<avg_fps_val<<"   fps "<<fps_val;
-	cv::putText(output, sstm.str(), cv::Point(15, 450), cv::FONT_HERSHEY_COMPLEX, 0.75, cv::Scalar(255),1,CV_AA,false);
+	cv::putText(output, sstm.str(), cv::Point(15, 450), cv::FONT_HERSHEY_COMPLEX, 0.75, cv::Scalar(255),1,cv::LINE_AA,false);
 	time_last_cycle=end;
 }
 
-void menu_elab()
-{
-	system(CLRSCR);
-
-	cout<<"Elabora l'immagine con:"<<endl<<endl;
-	cout<<"a:	LogPolar diretto (Bilinerare)"<<endl;
-	cout<<"b:	LogPolar diretto+inverso (Bilinerare)"<<endl;
-	cout<<"c:	LogPolar diretto (Bilinerare Gpu)"<<endl;
-	cout<<"d:	LogPolar diretto+inverso  (Bilinerare Gpu)"<<endl;
-	cout<<"i:	LogPolar diretto (Wilson)"<<endl;
-	cout<<"j:	LogPolar diretto+inverso  (Wilson)"<<endl;
-	cout<<"k:	LogPolar diretto (Wilson Gpu)"<<endl;
-	cout<<"l:	LogPolar diretto+inverso (Wilson Gpu)"<<endl;
-	cout<<"ESC per uscire"<<endl;
-	cout<<"s:	Salva il frame corrente"<<endl<<endl;
-	cout<<"Qualsiasi altro tasto per visualizzare l'immagine originaria"<<endl;
-
-
-}
-
+} // namespace rtlp
 

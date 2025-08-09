@@ -1,8 +1,8 @@
-#ifndef LPBILINEAR_H
-#define LPBILINEAR_H
+#pragma once
 
 #include "LogPolar.h"
 
+namespace rtlp {
 
 class LPBilinear : public LogPolar{
 protected:
@@ -19,5 +19,4 @@ public:
 	void process();
 };
 
-
-#endif
+} // namespace rtlp

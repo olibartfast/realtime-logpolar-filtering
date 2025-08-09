@@ -2,8 +2,7 @@
 #include "LPWilsonGpu.h"		
 #include "LPWilsonGpuKernel.cu"
 
-
-
+namespace rtlp {
 
 LPWilsonGpu::LPWilsonGpu(Image *i, bool inv):LPBilinearGpu(i,inv){}
 
@@ -122,3 +121,5 @@ void LPWilsonGpu::to_cartesian()
  cudaFree(NOR_d);
 
 }
+
+} // namespace rtlp

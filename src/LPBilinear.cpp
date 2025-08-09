@@ -1,5 +1,6 @@
 #include "LPBilinear.h"
 
+namespace rtlp {
 
 LPBilinear::LPBilinear(Image *i, bool inv):LogPolar(i,inv)
 {
@@ -139,3 +140,5 @@ void LPBilinear::process()
 	if(inv)
 		to_cartesian();
 }
+
+} // namespace rtlp

@@ -1,9 +1,10 @@
-#ifndef LOGPOLAR_H
-#define LOGPOLAR_H
+#pragma once
 
 #include "Image.h"
 
 #define BLOCKSZ 32
+
+namespace rtlp {
 
 class LogPolar{
 protected:
@@ -25,7 +26,5 @@ public:
  virtual void process()=0;
 };
 
-
-
-#endif
+} // namespace rtlp
 

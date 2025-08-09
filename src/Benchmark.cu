@@ -5,42 +5,17 @@
 #include "LPWilsonGpu.h"
 
 #include <unistd.h>
+#include <fstream>
+#include <iomanip>
+
+namespace rtlp {
 
 void Benchmark::ReadImg()
 {
-	system(CLRSCR);
-	cout<<"1.Carica immagine da webcam"<<endl;
-	cout<<"2.Carica immagine da file"<<endl;
-	int c;
-	cin>>c;
-	switch(c)
-	{	
-	 case 1:		
-		{
-		cv::VideoCapture capture(0);
-		capture.read(frame);
-		cvtColor(frame, img, CV_RGB2GRAY);
-		image->SetH(img.size().height);
-		image->SetW(img.size().width);
-		image->SetData(img.size().width, img.size().height);
-		for(int row=0;row<img.size().height;row++)
-	 	 for(int col=0;col<img.size().width;col++)
-	  	  image->GetDataPnt()[row*img.size().width+col]=((unsigned char*)( img.data+row*img.size().width))[col];
-		image->SetDataGpuR(image->GetDataPnt());
-		frame.release();
-		img.release();
-		}
-		break;
-	case 2:
-		{
-		system(CLRSCR);	
-		cout<<"Inserisci il nome del file"<<endl;
-		cin>>filename;
-		image->ReadData(filename);
- 		image->SetDataGpuR(image->GetDataPnt());
-		}
-		break;
-	}
+	cout << "Loading image: " << filename << endl;
+	image->ReadData(filename);
+	image->SetDataGpuR(image->GetDataPnt());
+	cout << "Image loaded successfully. Size: " << image->GetW() << "x" << image->GetH() << endl;
 }
 
 
@@ -121,17 +96,25 @@ void Benchmark::Run()
  cout<<"/////////////////////////////////////////////////////////"<<endl;
  PrintGpuProperties(gpuProperties);
  cout<<"---------------------------------------------------------"<<endl;
- cout<<"Dimensione immagine: "<<"H: "<<image->GetH()<<"   W: "<<image->GetW()<<endl<<endl;
+ cout<<"Image size: "<<"H: "<<image->GetH()<<"   W: "<<image->GetW()<<endl<<endl;
 
  Image *tmp=new Image();
  tmp->SetData(image->GetW(),image->GetH(), image->GetDataPnt());
 
- cout<<"Inserire numero iterazioni"<<endl;
- cin>>N;
+ N = iterations;
+ cout<<"Running benchmark with "<<N<<" iterations..."<<endl<<endl;
+ 
+ // Initialize CSV file
+ ofstream csvFile("benchmark_results.csv");
+ csvFile << "Iteration,LP_Bilinear_Direct_ms,LP_Bilinear_Inverse_ms,LP_Bilinear_GPU_Direct_ms,LP_Bilinear_GPU_Inverse_ms,";
+ csvFile << "LP_Wilson_Direct_ms,LP_Wilson_Inverse_ms,LP_Wilson_GPU_Direct_ms,LP_Wilson_GPU_Inverse_ms" << endl;
 
  float *avg=new float[8];
  for(int i=0; i<8; i++)
 	 avg[i]=0;
+
+ // Individual iteration timings for CSV
+ float iterTimes[8];
 
  for(int i=0; i<N;i++){
  cout<<endl<<"----------------------------------------"<<endl;
@@ -148,8 +131,9 @@ void Benchmark::Run()
  endCPU=clock();
 
  time=difftime(endCPU, startCPU)/Ttime;
+ iterTimes[0] = time;
  avg[0]=(avg[0]*i+time)/(i+1);
- cout<<"LPBilinear diretto: "<<time<<" ms"<<endl<<" Avg time: "<<avg[0]<<" ms"<<endl;
+ cout<<"LP Bilinear Direct: "<<time<<" ms"<<endl<<" Avg time: "<<avg[0]<<" ms"<<endl;
  
  //---------------------------------------------------------
  image->SetData(tmp->GetW(),tmp->GetH(), tmp->GetDataPnt());
@@ -160,8 +144,9 @@ void Benchmark::Run()
  endCPU=clock();
 
  time=difftime(endCPU, startCPU)/Ttime;
+ iterTimes[1] = time;
  avg[1]=(avg[1]*i+time)/(i+1);
- cout<<"LPBilinear diretto+inverso: "<<time<<" ms"<<endl<<" Avg time: "<<avg[1]<<" ms"<<endl;
+ cout<<"LP Bilinear Direct+Inverse: "<<time<<" ms"<<endl<<" Avg time: "<<avg[1]<<" ms"<<endl;
  
  usleep(1000*1000);
 
@@ -176,8 +161,9 @@ void Benchmark::Run()
  cudaEventSynchronize(stop);
  cudaEventElapsedTime(&time, start, stop);
 
+ iterTimes[2] = time;
  avg[2]=(avg[2]*i+time)/(i+1);
- cout<<endl<<"LPBilinear Gpu diretto: "<<time<<" ms"<<endl<<" Avg time: "<<avg[2]<<" ms"<<" Speedup: "<<avg[0]/avg[2]<<endl;
+ cout<<endl<<"LP Bilinear GPU Direct: "<<time<<" ms"<<endl<<" Avg time: "<<avg[2]<<" ms"<<" Speedup: "<<avg[0]/avg[2]<<endl;
 
 
  //--------------------------------------------------------- 
@@ -191,8 +177,9 @@ void Benchmark::Run()
  cudaEventSynchronize(stop);
  cudaEventElapsedTime(&time, start, stop);
 
+ iterTimes[3] = time;
  avg[3]=(avg[3]*i+time)/(i+1);
- cout<<"LPBilinear Gpu diretto+inverso: "<<time<<" ms"<<endl<<" Avg time: "<<avg[3]<<" ms"<<" Speedup: "<<avg[1]/avg[3]<<endl;
+ cout<<"LP Bilinear GPU Direct+Inverse: "<<time<<" ms"<<endl<<" Avg time: "<<avg[3]<<" ms"<<" Speedup: "<<avg[1]/avg[3]<<endl;
  
  //---------------------------------------------------------
  image->SetData(tmp->GetW(),tmp->GetH(), tmp->GetDataPnt());
@@ -202,8 +189,10 @@ void Benchmark::Run()
  lpwdir.process();
  endCPU=clock();
 
- avg[4]=(avg[4]*i+(difftime(endCPU, startCPU)/Ttime))/(i+1);
- cout<<endl<<"LPWilson diretto : "<<difftime(endCPU, startCPU)/Ttime<<"ms"<<endl<<" Avg time: "<<avg[4]<<" ms"<<endl;
+ time = difftime(endCPU, startCPU)/Ttime;
+ iterTimes[4] = time;
+ avg[4]=(avg[4]*i+time)/(i+1);
+ cout<<endl<<"LP Wilson Direct: "<<time<<" ms"<<endl<<" Avg time: "<<avg[4]<<" ms"<<endl;
 
  //---------------------------------------------------------
  image->SetData(tmp->GetW(),tmp->GetH(), tmp->GetDataPnt());
@@ -213,8 +202,10 @@ void Benchmark::Run()
  lpwinv.process();
  endCPU=clock();
 
- avg[5]=(avg[5]*i+(difftime(endCPU, startCPU)/Ttime))/(i+1);
- cout<<"LPWilson diretto+inverso: "<<difftime(endCPU, startCPU)/Ttime<<" ms"<<endl<<" Avg time: "<<avg[5]<<" ms"<<endl;
+ time = difftime(endCPU, startCPU)/Ttime;
+ iterTimes[5] = time;
+ avg[5]=(avg[5]*i+time)/(i+1);
+ cout<<"LP Wilson Direct+Inverse: "<<time<<" ms"<<endl<<" Avg time: "<<avg[5]<<" ms"<<endl;
  
 //---------------------------------------------------------
  image->SetData(tmp->GetW(),tmp->GetH(), tmp->GetDataPnt());
@@ -224,8 +215,10 @@ void Benchmark::Run()
  lpwgpudir.process();
  endCPU=clock();
 
- avg[6]=(avg[6]*i+(difftime(endCPU, startCPU)/Ttime))/(i+1);
- cout<<endl<<"LPWilson Gpu : "<<difftime(endCPU, startCPU)/Ttime<<"ms"<<endl<<" Avg time: "<<avg[6]<<" ms"<<" Speedup: "<<avg[4]/avg[6]<<endl;
+ time = difftime(endCPU, startCPU)/Ttime;
+ iterTimes[6] = time;
+ avg[6]=(avg[6]*i+time)/(i+1);
+ cout<<endl<<"LP Wilson GPU Direct: "<<time<<" ms"<<endl<<" Avg time: "<<avg[6]<<" ms"<<" Speedup: "<<avg[4]/avg[6]<<endl;
 
  //---------------------------------------------------------
  image->SetData(tmp->GetW(),tmp->GetH(), tmp->GetDataPnt());
@@ -235,9 +228,17 @@ void Benchmark::Run()
  lpwgpuinv.process();
  endCPU=clock();
 
- avg[7]=(avg[7]*i+(difftime(endCPU, startCPU)/Ttime))/(i+1);
- cout<<"LPWilson GPU diretto+inverso: "<<difftime(endCPU, startCPU)/Ttime<<" ms"<<endl<<" Avg time: "<<avg[7]<<" ms"<<" Speedup: "<<avg[5]/avg[7]<<endl;
+ time = difftime(endCPU, startCPU)/Ttime;
+ iterTimes[7] = time;
+ avg[7]=(avg[7]*i+time)/(i+1);
+ cout<<"LP Wilson GPU Direct+Inverse: "<<time<<" ms"<<endl<<" Avg time: "<<avg[7]<<" ms"<<" Speedup: "<<avg[5]/avg[7]<<endl;
 
+ // Write iteration data to CSV
+ csvFile << i+1;
+ for(int j=0; j<8; j++) {
+     csvFile << "," << fixed << setprecision(3) << iterTimes[j];
+ }
+ csvFile << endl;
  
  //---------------------------------------------------------
  }
@@ -246,14 +247,31 @@ void Benchmark::Run()
 
 
 
- cudaDeviceReset();
- delete tmp;
- delete avg;
+ // Write average times to CSV
+csvFile << endl << "AVERAGES";
+for(int j=0; j<8; j++) {
+    csvFile << "," << fixed << setprecision(3) << avg[j];
+}
+csvFile << endl;
+
+// Write speedup information
+csvFile << endl << "SPEEDUPS,N/A,N/A," << fixed << setprecision(2) 
+        << avg[0]/avg[2] << "," << avg[1]/avg[3] << ",N/A,N/A," 
+        << avg[4]/avg[6] << "," << avg[5]/avg[7] << endl;
+
+csvFile.close();
+cout << endl << "Results saved to benchmark_results.csv" << endl;
+
+cudaDeviceReset();
+delete tmp;
+delete avg;
 }
 
 
 void Benchmark::PrintGpuProperties(const struct cudaDeviceProp gpuProp) {
-  cout<<"Nome della GPU: "<<gpuProp.name<<endl;
+  cout<<"GPU Name: "<<gpuProp.name<<endl;
   cout<<"Compute Capability: "<<gpuProp.major<<"."<<gpuProp.minor<<endl;
 
 }
+
+} // namespace rtlp

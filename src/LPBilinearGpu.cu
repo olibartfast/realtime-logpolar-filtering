@@ -1,6 +1,7 @@
 #include "LPBilinearGpu.h"
 #include "LPBilinearGpuKernel.cu"
 
+namespace rtlp {
 
 LPBilinearGpu::LPBilinearGpu(Image *i, bool inv):LogPolar(i,inv){}
 
@@ -73,6 +74,4 @@ void LPBilinearGpu::to_cartesian(){
  delete [] ret;
 }
 
-
-
-
+} // namespace rtlp

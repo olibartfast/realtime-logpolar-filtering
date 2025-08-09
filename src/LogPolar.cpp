@@ -1,5 +1,6 @@
 #include "LogPolar.h"
 
+namespace rtlp {
 
 LogPolar::LogPolar(Image *i, bool inv){
  this->inv=inv;
@@ -18,3 +19,5 @@ LogPolar::LogPolar(Image *i, bool inv){
  q=(float)S/(2*M_PI);
  imgfilter->SetDataGpuC(R,S);
 }
+
+} // namespace rtlp

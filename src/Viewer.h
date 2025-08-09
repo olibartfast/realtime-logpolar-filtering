@@ -1,5 +1,4 @@
-#ifndef VIEWER_H
-#define VIEWER_H
+#pragma once
 
 #include "Image.h"
 
@@ -9,6 +8,19 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/videoio.hpp>
 
+namespace rtlp {
+
+enum FilterMode {
+    FILTER_BILINEAR,
+    FILTER_BILINEAR_INV,
+    FILTER_BILINEAR_GPU,
+    FILTER_BILINEAR_GPU_INV,
+    FILTER_WILSON,
+    FILTER_WILSON_INV,
+    FILTER_WILSON_GPU,
+    FILTER_WILSON_GPU_INV,
+    FILTER_NONE
+};
 
 class Viewer{
 	Image *im;
@@ -17,15 +29,16 @@ class Viewer{
 	cv::Mat output;
 	time_t start,end, time_last_cycle;
 	int fps;
+	FilterMode filter_mode;
 
 public:
-	Viewer(){}
+	Viewer(){filter_mode = FILTER_NONE;}
 	~Viewer(){}
 	void show();
 	void SetImage(Image* i);
+	void SetFilter(FilterMode mode);
 	void compute_fps(int cnt);
 
 };
 
-
-#endif
+} // namespace rtlp

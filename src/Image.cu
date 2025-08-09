@@ -4,6 +4,8 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
+namespace rtlp {
+
 Image::Image(){data=NULL;}
 
 
@@ -53,11 +55,11 @@ void Image::ReadData(string nf)
 {
  cv::Mat img=cv::imread(nf);
  if (!img.data){ 
-  cout<<"Non e' possibile leggere l'immagine"<<endl;
+  cout<<"Cannot read the image"<<endl;
   return;
  }	
  cv::Mat imgR;
- cvtColor(img, imgR, CV_RGB2GRAY);
+ 	cvtColor(img, imgR, cv::COLOR_BGR2GRAY);
  H=imgR.size().height;
  W=imgR.size().width;
  SetData(imgR.size().width, imgR.size().height);
@@ -74,6 +76,8 @@ void Image::WriteData(string nf){
   for(int col=0;col<W;col++)
    (( imgW.data+row*W)[col])=data[row*W+col];
  if(!cv::imwrite(nf,imgW)) 
-  cout<<"Non e' possibile salvare l'immagine"<<endl;
+  cout<<"Cannot save the image"<<endl;
   imgW.release();
 }
+
+} // namespace rtlp

@@ -1,5 +1,7 @@
 #include "LPWilson.h"
 
+namespace rtlp {
+
 //Costruttore e distruttore
 LPWilson::LPWilson(Image *i, bool inv):LPBilinear(i,inv){}
 LPWilson::~LPWilson(){
@@ -172,3 +174,5 @@ void LPWilson::to_cartesian(){
  delete [] IMG;
  delete [] NOR;
 }
+
+} // namespace rtlp

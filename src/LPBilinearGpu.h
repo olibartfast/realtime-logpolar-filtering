@@ -1,8 +1,8 @@
-#ifndef LPBILINEARGPU_H
-#define LPBILINEARGPU_H
+#pragma once
 
 #include "LogPolar.h"
 
+namespace rtlp {
 
 class LPBilinearGpu : public LogPolar{
  protected:
@@ -20,4 +20,4 @@ class LPBilinearGpu : public LogPolar{
 
 };
 
-#endif
+} // namespace rtlp

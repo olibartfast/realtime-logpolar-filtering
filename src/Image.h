@@ -1,5 +1,4 @@
-#ifndef IMAGE_H
-#define IMAGE_H
+#pragma once
 
 #if  __unix__
  #define CLRSCR "clear"
@@ -20,6 +19,8 @@
 #include <cmath>
 
 using namespace std;
+
+namespace rtlp {
 
 class Image{
 private:
@@ -50,4 +51,4 @@ public:
  void ReadData(string nf);
 };
 
-#endif
+} // namespace rtlp

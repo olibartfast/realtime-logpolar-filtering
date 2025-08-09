@@ -1,5 +1,6 @@
-#ifndef LPWILSONCUDAGPUKERNEL_H
-#define LPWILSONCUDAGPUKERNEL_H
+#pragma once
+
+namespace rtlp {
 
 __device__ void kernelMask(int R, int S, int u, int v, float *mask, int rmax, int radius, float x, float y, float sigma);
 __global__ void radiusKernel(float p0,float a, int R, int *radiusArray_d, float *sigmaArray_d);
@@ -10,4 +11,4 @@ __global__ void antiTransformKernel1(int R,int S, int W, int H, int radiusmax, i
 __global__ void	antiTransformKernel2(int R, int S, int W,int H,int umaxfidx,int rmax,int *ret,
 										float *e,  int *pradius, float *IMG, float *NOR);
 
-#endif
+} // namespace rtlp

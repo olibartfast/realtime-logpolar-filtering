@@ -1,5 +1,7 @@
 #include "LPWilsonGpuKernel.h"
 
+namespace rtlp {
+
 __device__ void kernelMask(int R, int S, int u, int v, float *mask, int rmax, int radius, float x, float y, float sigma)
 {
  float sum=0;
@@ -111,3 +113,5 @@ __global__ void	antiTransformKernel2(int R, int S, int W,int H,int umaxfidx,int 
   ret[W*(j-rmax)+i-rmax]=static_cast<int>(floor(IMG[(W+2*rmax+1)*j+i]+0.5));
 
 }
+
+} // namespace rtlp

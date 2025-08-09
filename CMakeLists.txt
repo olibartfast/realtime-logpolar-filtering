@@ -1,42 +1,51 @@
-cmake_minimum_required(VERSION 3.5.1)
+cmake_minimum_required(VERSION 3.20)
 
-project (realtime-logpolar-filtering)
+project(realtime-logpolar-filtering LANGUAGES CXX CUDA)
 
 find_package(OpenCV REQUIRED)
-find_package(CUDA REQUIRED)
+find_package(CUDAToolkit REQUIRED)
 
-link_libraries(${OpenCV_LIBS} ${CUDA_LIBS})
-include_directories(${OpenCV_INCLUDE_DIRS} ${CUDA_INCLUDE_DIRS})
+# Set CUDA flags
+set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -O3 -use_fast_math")
+set(CMAKE_CUDA_FLAGS_DEBUG "${CMAKE_CUDA_FLAGS_DEBUG} -G")
 
+# Add include directories
+include_directories(${OpenCV_INCLUDE_DIRS})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 
+# Gather source files
+file(GLOB_RECURSE CPP_SOURCES "src/*.cpp" "src/*.h")
+file(GLOB_RECURSE CUDA_SOURCES "src/*.cu")
 
-if(CUDA_FOUND)
-  set(CUDA_NVCC_FLAGS
-  ${CUDA_NVCC_FLAGS};
-  -O3 -use_fast_math
+# Remove kernel files that are included by other .cu files to avoid multiple definitions
+list(REMOVE_ITEM CUDA_SOURCES 
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/LPBilinearGpuKernel.cu"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/LPWilsonGpuKernel.cu")
+
+message("CPP_SOURCES = ${CPP_SOURCES}")
+message("CUDA_SOURCES = ${CUDA_SOURCES}")
+
+# Create executable
+add_executable(rtlp ${CPP_SOURCES} ${CUDA_SOURCES})
+
+# Enable debug info in device code for debug builds
+target_compile_options(rtlp PRIVATE "$<$<AND:$<CONFIG:Debug>,$<COMPILE_LANGUAGE:CUDA>>:-G;-src-in-ptx>")
+target_compile_options(rtlp PRIVATE "$<$<AND:$<CONFIG:Release>,$<COMPILE_LANGUAGE:CUDA>>:-use_fast_math;-lineinfo>")
+
+# Set CUDA properties for the target
+set_target_properties(rtlp PROPERTIES 
+    CUDA_SEPARABLE_COMPILATION ON
+    CUDA_ARCHITECTURES native)
+
+target_compile_features(rtlp PRIVATE cxx_std_17 cuda_std_17)    
+
+# Link libraries
+target_link_libraries(rtlp PRIVATE 
+    ${OpenCV_LIBS}
+    CUDA::cudart
 )
 
-  # add debugging to CUDA NVCC flags.  For NVidia's NSight tools.
-set(CUDA_NVCC_FLAGS_DEBUG ${CUDA_NVCC_FLAGS_DEBUG} "-G")
-
-else(CUDA_FOUND)
-  message("CUDA is not installed on this system.")
-endif()
-
-
+# Set position-independent code for Unix/Apple
 if(UNIX OR APPLE)
-  list(APPEND CUDA_NVCC_FLAGS "-Xcompiler;-fPIC;")
+    set_property(TARGET rtlp PROPERTY POSITION_INDEPENDENT_CODE ON)
 endif()
-
-
-file( GLOB src_c src/*.cpp )
-file( GLOB src_cu src/*.cu )
-cuda_compile(benchmark_o src/Benchmark.cu)
-cuda_compile(image_o src/Image.cu)
-cuda_compile(lpbil_o src/LPBilinearGpu.cu)    
-cuda_compile(lpwil_o src/LPWilsonGpu.cu) 
-file( GLOB inc src/*.h )
-
-
-
-cuda_add_executable(rtlp ${src_c} ${benchmark_o} ${image_o} ${lpbil_o} ${lpwil_o}  )

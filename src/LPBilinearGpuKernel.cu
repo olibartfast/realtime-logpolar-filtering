@@ -1,3 +1,5 @@
+namespace rtlp {
+
 const __device__ float PI=3.141592653589793;
 
 __global__ void createCorticalMapKernel(int x0, int y0, float a, float q, float p0,  float *xc, float *yc, int R, int S)
@@ -98,3 +100,4 @@ if(row<Hout && col<Wout){
 	}
 }
 
+} // namespace rtlp
