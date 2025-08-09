@@ -1,6 +1,6 @@
 #pragma once
 
-#include "rtlp/core/Image.h"
+#include "rtlp/core/Image.hpp"
 
 #define BLOCKSZ 32
 

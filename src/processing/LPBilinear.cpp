@@ -1,4 +1,4 @@
-#include "rtlp/processing/LPBilinear.h"
+#include "rtlp/processing/LPBilinear.hpp"
 
 namespace rtlp {
 namespace processing {

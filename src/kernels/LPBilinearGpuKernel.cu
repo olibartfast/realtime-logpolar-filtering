@@ -1,4 +1,4 @@
-#include "../../include/rtlp/kernels/LPBilinearGpuKernel.h"
+#include "../../include/rtlp/kernels/LPBilinearGpuKernel.hpp"
 
 namespace rtlp {
 namespace kernels {

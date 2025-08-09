@@ -15,7 +15,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # Gather source files
-file(GLOB_RECURSE CPP_SOURCES "src/*.cpp" "src/*.h")
+file(GLOB_RECURSE CPP_SOURCES "src/*.cpp" "src/*.hpp")
 file(GLOB_RECURSE CUDA_SOURCES "src/*.cu")
 
 # Remove kernel files that are included by other .cu files to avoid multiple definitions

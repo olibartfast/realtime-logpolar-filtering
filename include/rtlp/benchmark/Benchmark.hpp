@@ -1,6 +1,6 @@
 #pragma once
 
-#include "rtlp/core/Image.h"
+#include "rtlp/core/Image.hpp"
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>

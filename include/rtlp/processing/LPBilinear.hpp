@@ -1,6 +1,6 @@
 #pragma once
 
-#include "LogPolar.h"
+#include "LogPolar.hpp"
 
 namespace rtlp {
 namespace processing {

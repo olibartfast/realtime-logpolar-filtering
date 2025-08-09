@@ -1,6 +1,6 @@
 #pragma once
 
-#include "LPBilinearGpu.h"
+#include "LPBilinearGpu.hpp"
 
 namespace rtlp {
 namespace processing {

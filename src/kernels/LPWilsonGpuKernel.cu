@@ -1,4 +1,4 @@
-#include "../../include/rtlp/kernels/LPWilsonGpuKernel.h"
+#include "../../include/rtlp/kernels/LPWilsonGpuKernel.hpp"
 
 namespace rtlp {
 namespace kernels {

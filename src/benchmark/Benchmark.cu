@@ -1,8 +1,8 @@
-#include "rtlp/benchmark/Benchmark.h"
-#include "rtlp/processing/LPBilinear.h"
-#include "rtlp/processing/LPBilinearGpu.h"
-#include "rtlp/processing/LPWilson.h"
-#include "rtlp/processing/LPWilsonGpu.h"
+#include "rtlp/benchmark/Benchmark.hpp"
+#include "rtlp/processing/LPBilinear.hpp"
+#include "rtlp/processing/LPBilinearGpu.hpp"
+#include "rtlp/processing/LPWilson.hpp"
+#include "rtlp/processing/LPWilsonGpu.hpp"
 
 #include <unistd.h>
 #include <fstream>

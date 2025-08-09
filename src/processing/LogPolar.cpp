@@ -1,4 +1,4 @@
-#include "rtlp/processing/LogPolar.h"
+#include "rtlp/processing/LogPolar.hpp"
 
 namespace rtlp {
 namespace processing {

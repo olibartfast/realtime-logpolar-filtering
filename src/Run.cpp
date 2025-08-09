@@ -1,5 +1,5 @@
-#include "rtlp/video/VideoProcessor.h"
-#include "rtlp/benchmark/Benchmark.h"
+#include "rtlp/video/VideoProcessor.hpp"
+#include "rtlp/benchmark/Benchmark.hpp"
 #include <iostream>
 #include <string>
 #include <cstring>

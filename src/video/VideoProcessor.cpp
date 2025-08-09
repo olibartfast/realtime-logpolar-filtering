@@ -1,9 +1,9 @@
-#include "rtlp/video/VideoProcessor.h"
+#include "rtlp/video/VideoProcessor.hpp"
 
-#include "rtlp/processing/LPBilinear.h"
-#include "rtlp/processing/LPBilinearGpu.h"
-#include "rtlp/processing/LPWilson.h"
-#include "rtlp/processing/LPWilsonGpu.h"
+#include "rtlp/processing/LPBilinear.hpp"
+#include "rtlp/processing/LPBilinearGpu.hpp"
+#include "rtlp/processing/LPWilson.hpp"
+#include "rtlp/processing/LPWilsonGpu.hpp"
 
 namespace rtlp {
 namespace video {

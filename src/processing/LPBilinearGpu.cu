@@ -1,4 +1,4 @@
-#include "rtlp/processing/LPBilinearGpu.h"
+#include "rtlp/processing/LPBilinearGpu.hpp"
 #include "../kernels/LPBilinearGpuKernel.cu"
 
 namespace rtlp {

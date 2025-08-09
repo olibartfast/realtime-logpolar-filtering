@@ -1,4 +1,4 @@
-#include "rtlp/processing/LPWilson.h"
+#include "rtlp/processing/LPWilson.hpp"
 
 namespace rtlp {
 namespace processing {

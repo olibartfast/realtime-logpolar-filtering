@@ -1,6 +1,6 @@
 #pragma once
 
-#include "LPBilinear.h"
+#include "LPBilinear.hpp"
 
 namespace rtlp {
 namespace processing {

@@ -1,5 +1,5 @@
-#include "rtlp/processing/LPWilsonGpu.h"
-#include "rtlp/kernels/LPBilinearGpuKernel.h"
+#include "rtlp/processing/LPWilsonGpu.hpp"
+#include "rtlp/kernels/LPBilinearGpuKernel.hpp"
 #include "../kernels/LPWilsonGpuKernel.cu"
 
 namespace rtlp {
