@@ -24,6 +24,7 @@
 using namespace std;
 
 namespace rtlp {
+namespace core {
 
 class Image{
 private:
@@ -55,4 +56,5 @@ public:
  void ReadData(const std::string& nf);
 };
 
+} // namespace core
 } // namespace rtlp

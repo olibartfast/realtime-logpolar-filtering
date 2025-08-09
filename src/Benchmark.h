@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Image.h"
+#include "rtlp/core/Image.h"
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -10,7 +10,7 @@
 namespace rtlp {
 
 class Benchmark{
-	Image *image;
+	rtlp::core::Image *image;
 	cv::Mat frame;
 	cv::Mat img;
 	string filename;
@@ -18,7 +18,7 @@ class Benchmark{
 	time_t startCPU, endCPU;
 
 public:
-	Benchmark(Image *img, const std::string& image_path = "test.jpg", int iter = 10)
+	Benchmark(rtlp::core::Image *img, const std::string& image_path = "test.jpg", int iter = 10)
 		: image(img), filename(image_path), iterations(iter) {}
 	~Benchmark() = default;
 	void ReadImg();

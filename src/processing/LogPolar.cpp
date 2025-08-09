@@ -3,7 +3,7 @@
 namespace rtlp {
 namespace processing {
 
-LogPolar::LogPolar(Image *i, bool inv){
+LogPolar::LogPolar(rtlp::core::Image *i, bool inv){
  this->inv=inv;
  imgfilter=i;
  W=i->GetW(); H=i->GetH();

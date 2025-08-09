@@ -1,10 +1,11 @@
-#include "Image.h"
+#include "rtlp/core/Image.h"
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
 namespace rtlp {
+namespace core {
 
 Image::Image() : ret(nullptr), cort(nullptr) {}
 
@@ -78,4 +79,5 @@ void Image::WriteData(const std::string& nf) {
   imgW.release();
 }
 
+} // namespace core
 } // namespace rtlp

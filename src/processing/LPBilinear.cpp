@@ -3,7 +3,7 @@
 namespace rtlp {
 namespace processing {
 
-LPBilinear::LPBilinear(Image *i, bool inv):LogPolar(i,inv)
+LPBilinear::LPBilinear(rtlp::core::Image *i, bool inv):LogPolar(i,inv)
 {
 	xc=new float[R*S];
 	yc=new float[R*S];

@@ -4,7 +4,7 @@ namespace rtlp {
 namespace processing {
 
 //Constructor and destructor
-LPWilson::LPWilson(Image *i, bool inv):LPBilinear(i,inv){}
+LPWilson::LPWilson(rtlp::core::Image *i, bool inv):LPBilinear(i,inv){}
 LPWilson::~LPWilson(){
  for(int i=0; i<R*S; i++)
  {

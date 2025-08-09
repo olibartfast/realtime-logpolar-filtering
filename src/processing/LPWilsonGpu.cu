@@ -5,7 +5,7 @@
 namespace rtlp {
 namespace processing {
 
-LPWilsonGpu::LPWilsonGpu(Image *i, bool inv):LPBilinearGpu(i,inv){}
+LPWilsonGpu::LPWilsonGpu(rtlp::core::Image *i, bool inv):LPBilinearGpu(i,inv){}
 
 LPWilsonGpu::~LPWilsonGpu(){
  cudaFree(radiusArray_d);

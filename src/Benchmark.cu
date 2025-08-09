@@ -21,7 +21,7 @@ void Benchmark::ReadImg()
 
 void Benchmark::SaveImg()
 {
- Image *tmp=new Image();
+ rtlp::core::Image *tmp=new rtlp::core::Image();
  tmp->SetData(image->GetW(),image->GetH(), image->GetDataPnt());
 
  image->WriteData("1_unprocessed.jpg");
@@ -98,7 +98,7 @@ void Benchmark::Run()
  cout<<"---------------------------------------------------------"<<endl;
  cout<<"Image size: "<<"H: "<<image->GetH()<<"   W: "<<image->GetW()<<endl<<endl;
 
- Image *tmp=new Image();
+ rtlp::core::Image *tmp=new rtlp::core::Image();
  tmp->SetData(image->GetW(),image->GetH(), image->GetDataPnt());
 
  N = iterations;

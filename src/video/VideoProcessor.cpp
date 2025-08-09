@@ -36,7 +36,7 @@ static string ImageSaveModeTxt[] = {
 
 
 
-void VideoProcessor::SetImage(Image* i) {im = i;}
+void VideoProcessor::SetImage(rtlp::core::Image* i) {im = i;}
 
 void VideoProcessor::SetFilter(FilterMode mode) {filter_mode = mode;}
 

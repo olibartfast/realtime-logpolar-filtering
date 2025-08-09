@@ -10,7 +10,7 @@ class LPBilinearGpu : public LogPolar{
   float *xc_d, *yc_d;
   float *e_d, *n_d;
  public:
-  LPBilinearGpu(Image *i, bool inv);
+  LPBilinearGpu(rtlp::core::Image *i, bool inv);
   ~LPBilinearGpu();
   void create_map();
   void to_cortical();

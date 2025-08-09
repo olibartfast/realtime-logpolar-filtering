@@ -4,7 +4,7 @@
 namespace rtlp {
 namespace processing {
 
-LPBilinearGpu::LPBilinearGpu(Image *i, bool inv):LogPolar(i,inv){}
+LPBilinearGpu::LPBilinearGpu(rtlp::core::Image *i, bool inv):LogPolar(i,inv){}
 
 LPBilinearGpu::~LPBilinearGpu()
 {

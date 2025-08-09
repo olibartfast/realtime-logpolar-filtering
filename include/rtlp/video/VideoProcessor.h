@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Image.h"
+#include "rtlp/core/Image.h"
 
 
 #include <opencv2/core/core.hpp>
@@ -24,7 +24,7 @@ enum class FilterMode {
 };
 
 class VideoProcessor{
-	Image *im;
+	rtlp::core::Image *im;
 	cv::Mat frame;
 	cv::Mat img;
 	cv::Mat output;
@@ -36,7 +36,7 @@ public:
 	VideoProcessor() : im(nullptr), fps(0), filter_mode(FilterMode::NONE) {}
 	~VideoProcessor() = default;
 	void show();
-	void SetImage(Image* i);
+	void SetImage(rtlp::core::Image* i);
 	void SetFilter(FilterMode mode);
 	void compute_fps(int cnt);
 

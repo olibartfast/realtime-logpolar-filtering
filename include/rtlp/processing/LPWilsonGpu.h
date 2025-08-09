@@ -14,7 +14,7 @@ class LPWilsonGpu : public LPBilinearGpu{
  float *IMG_d;
 
  public:
-  LPWilsonGpu(Image *i, bool inv);
+  LPWilsonGpu(rtlp::core::Image *i, bool inv);
   ~LPWilsonGpu();
   void create_map();
   void to_cortical();

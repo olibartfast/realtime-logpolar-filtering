@@ -13,7 +13,7 @@ class LPWilson : public LPBilinear{
 	int umaxfidx;
 
 public:
-	LPWilson(Image *i, bool inv);
+	LPWilson(rtlp::core::Image *i, bool inv);
 	~LPWilson();
 
 	void create_map();

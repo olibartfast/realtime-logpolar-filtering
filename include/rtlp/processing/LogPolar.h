@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Image.h"
+#include "rtlp/core/Image.h"
 
 #define BLOCKSZ 32
 
@@ -9,7 +9,7 @@ namespace processing {
 
 class LogPolar{
 protected:
- Image *imgfilter;
+ rtlp::core::Image *imgfilter;
  int W,H;
  float p, o; // rho and theta
  float p0; //minimum radius
@@ -19,7 +19,7 @@ protected:
  bool inv;
 
 public:
- LogPolar(Image *i, bool inv);
+ LogPolar(rtlp::core::Image *i, bool inv);
  ~LogPolar(){}
  virtual void create_map()=0;
  virtual void to_cortical()=0;
