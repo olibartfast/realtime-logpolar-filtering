@@ -1,9 +1,9 @@
 #include "VideoProcessor.h"
 
-#include "LPBilinear.h"
-#include "LPBilinearGpu.h"
-#include "LPWilson.h"
-#include "LPWilsonGpu.h"
+#include "rtlp/processing/LPBilinear.h"
+#include "rtlp/processing/LPBilinearGpu.h"
+#include "rtlp/processing/LPWilson.h"
+#include "rtlp/processing/LPWilsonGpu.h"
 
 namespace rtlp {
 
@@ -110,7 +110,7 @@ void VideoProcessor::show()
 		switch(filter_mode){
 		case FilterMode::BILINEAR:
 				{
-					LPBilinear  lpbdir(im, false);
+					processing::LPBilinear  lpbdir(im, false);
 					lpbdir.process();
 					isml = ImageSaveModeLabel::LP_BIL;
 				}
@@ -118,21 +118,21 @@ void VideoProcessor::show()
 		
 		case FilterMode::BILINEAR_INV:
 				{
-					LPBilinear  lpbinv(im, true);
+					processing::LPBilinear  lpbinv(im, true);
 					lpbinv.process();
 					isml = ImageSaveModeLabel::LP_BIL_INV;
 				}
 				break;
 		case FilterMode::BILINEAR_GPU:		
 				{
-					LPBilinearGpu lpbgpudir(im, false);
+					processing::LPBilinearGpu lpbgpudir(im, false);
 					lpbgpudir.process();
 					isml = ImageSaveModeLabel::LP_BIL_GPU;
 				}
 				break;
 		case FilterMode::BILINEAR_GPU_INV:
 				{
-					LPBilinearGpu lpbgpuinv(im, true);
+					processing::LPBilinearGpu lpbgpuinv(im, true);
 					lpbgpuinv.process();
 					isml = ImageSaveModeLabel::LP_BIL_GPU_INV;
 				}
@@ -140,28 +140,28 @@ void VideoProcessor::show()
 
 		case FilterMode::WILSON:
 				{
-					LPWilson  lpwdir(im, false);
+					processing::LPWilson  lpwdir(im, false);
 					lpwdir.process();
 					isml = ImageSaveModeLabel::LP_WIL;
 				}
 				break;
 		case FilterMode::WILSON_INV:
 				{
-					LPWilson  lpwinv(im, true);
+					processing::LPWilson  lpwinv(im, true);
 					lpwinv.process();
 					isml = ImageSaveModeLabel::LP_WIL_INV;
 				}
 				break;
 		case FilterMode::WILSON_GPU:
 				{
-					LPWilsonGpu  lpwgpudir(im, false);
+					processing::LPWilsonGpu  lpwgpudir(im, false);
 					lpwgpudir.process();
 					isml = ImageSaveModeLabel::LP_WIL_GPU;
 				}
 				break;
 		case FilterMode::WILSON_GPU_INV:
 				{
-					LPWilsonGpu  lpwgpuinv(im, true);
+					processing::LPWilsonGpu  lpwgpuinv(im, true);
 					lpwgpuinv.process();
 					isml = ImageSaveModeLabel::LP_WIL_GPU_INV;
 				}

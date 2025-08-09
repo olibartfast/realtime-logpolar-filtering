@@ -5,6 +5,7 @@
 #define BLOCKSZ 32
 
 namespace rtlp {
+namespace processing {
 
 class LogPolar{
 protected:
@@ -26,5 +27,6 @@ public:
  virtual void process()=0;
 };
 
+} // namespace processing
 } // namespace rtlp
 

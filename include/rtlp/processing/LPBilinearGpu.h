@@ -3,6 +3,7 @@
 #include "LogPolar.h"
 
 namespace rtlp {
+namespace processing {
 
 class LPBilinearGpu : public LogPolar{
  protected:
@@ -20,4 +21,5 @@ class LPBilinearGpu : public LogPolar{
 
 };
 
+} // namespace processing
 } // namespace rtlp

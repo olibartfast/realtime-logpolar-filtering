@@ -1,6 +1,7 @@
-#include "LogPolar.h"
+#include "rtlp/processing/LogPolar.h"
 
 namespace rtlp {
+namespace processing {
 
 LogPolar::LogPolar(Image *i, bool inv){
  this->inv=inv;
@@ -20,4 +21,5 @@ LogPolar::LogPolar(Image *i, bool inv){
  imgfilter->SetDataGpuC(R,S);
 }
 
+} // namespace processing
 } // namespace rtlp

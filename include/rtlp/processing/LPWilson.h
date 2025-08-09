@@ -3,6 +3,7 @@
 #include "LPBilinear.h"
 
 namespace rtlp {
+namespace processing {
 
 struct kernel { float *kernelmatrix; int radius;};
 
@@ -23,4 +24,5 @@ public:
 
 };
 
+} // namespace processing
 } // namespace rtlp

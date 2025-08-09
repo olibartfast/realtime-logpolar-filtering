@@ -3,6 +3,7 @@
 #include "LPBilinearGpu.h"
 
 namespace rtlp {
+namespace processing {
 
 class LPWilsonGpu : public LPBilinearGpu{
  int *radiusArray_d;
@@ -21,4 +22,5 @@ class LPWilsonGpu : public LPBilinearGpu{
   void process();
 };
 
+} // namespace processing
 } // namespace rtlp

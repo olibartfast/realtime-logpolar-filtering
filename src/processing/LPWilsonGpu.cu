@@ -1,8 +1,9 @@
-#include "LPWilsonGpu.h"
-#include "../include/rtlp/kernels/LPBilinearGpuKernel.h"
-#include "kernels/LPWilsonGpuKernel.cu"
+#include "rtlp/processing/LPWilsonGpu.h"
+#include "rtlp/kernels/LPBilinearGpuKernel.h"
+#include "../kernels/LPWilsonGpuKernel.cu"
 
 namespace rtlp {
+namespace processing {
 
 LPWilsonGpu::LPWilsonGpu(Image *i, bool inv):LPBilinearGpu(i,inv){}
 
@@ -122,4 +123,5 @@ void LPWilsonGpu::to_cartesian()
 
 }
 
+} // namespace processing
 } // namespace rtlp

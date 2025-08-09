@@ -3,6 +3,7 @@
 #include "LogPolar.h"
 
 namespace rtlp {
+namespace processing {
 
 class LPBilinear : public LogPolar{
 protected:
@@ -19,4 +20,5 @@ public:
 	void process();
 };
 
+} // namespace processing
 } // namespace rtlp
