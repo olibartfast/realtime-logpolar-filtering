@@ -1,4 +1,4 @@
-#include "Viewer.h"
+#include "VideoProcessor.h"
 
 #include "LPBilinear.h"
 #include "LPBilinearGpu.h"
@@ -35,12 +35,12 @@ static string ImageSaveModeTxt[] = {
 
 
 
-void Viewer::SetImage(Image* i) {im = i;}
+void VideoProcessor::SetImage(Image* i) {im = i;}
 
-void Viewer::SetFilter(FilterMode mode) {filter_mode = mode;}
+void VideoProcessor::SetFilter(FilterMode mode) {filter_mode = mode;}
 
 
-void Viewer::show()
+void VideoProcessor::show()
 {
 	cv::VideoCapture capture(0);
 	start=clock();
@@ -206,7 +206,7 @@ void Viewer::show()
 }
 
 
-void Viewer::compute_fps(int cnt)
+void VideoProcessor::compute_fps(int cnt)
 {
 	stringstream sstm, sstm2;
 	float avg_fps_val, fps_val;

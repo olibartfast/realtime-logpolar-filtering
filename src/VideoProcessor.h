@@ -22,7 +22,7 @@ enum FilterMode {
     FILTER_NONE
 };
 
-class Viewer{
+class VideoProcessor{
 	Image *im;
 	cv::Mat frame;
 	cv::Mat img;
@@ -32,8 +32,8 @@ class Viewer{
 	FilterMode filter_mode;
 
 public:
-	Viewer(){filter_mode = FILTER_NONE;}
-	~Viewer(){}
+	VideoProcessor(){filter_mode = FILTER_NONE;}
+	~VideoProcessor(){}
 	void show();
 	void SetImage(Image* i);
 	void SetFilter(FilterMode mode);

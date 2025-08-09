@@ -1,4 +1,4 @@
-#include "Viewer.h"
+#include "VideoProcessor.h"
 #include "Benchmark.h"
 #include <iostream>
 #include <string>
@@ -8,7 +8,7 @@ using namespace std;
 using namespace rtlp;
 
 void print_help() {
-    cout << "Usage: ./program [MODE] [FILTER] [OPTIONS]" << endl << endl;
+    cout << "Usage: ./rtlp [MODE] [FILTER] [OPTIONS]" << endl << endl;
     cout << "MODES:" << endl;
     cout << "  --realtime    Process video in real-time" << endl;
     cout << "  --benchmark   Run benchmark tests" << endl << endl;
@@ -26,10 +26,10 @@ void print_help() {
     cout << "  --image <path>     Image file path (default: test.jpg)" << endl;
     cout << "  --iterations <n>   Number of benchmark iterations (default: 10)" << endl << endl;
     cout << "Examples:" << endl;
-    cout << "  ./program --realtime --bilinear" << endl;
-    cout << "  ./program --benchmark" << endl;
-    cout << "  ./program --benchmark --image myimage.jpg --iterations 50" << endl;
-    cout << "  ./program --help" << endl;
+    cout << "  ./rtlp --realtime --bilinear" << endl;
+    cout << "  ./rtlp --benchmark" << endl;
+    cout << "  ./rtlp --benchmark --image myimage.jpg --iterations 50" << endl;
+    cout << "  ./rtlp --help" << endl;
 }
 
 int main(int argc, char* argv[])
@@ -88,10 +88,10 @@ int main(int argc, char* argv[])
             return 1;
         }
         
-        Viewer view;
-        view.SetImage(&img);
-        view.SetFilter(filter);
-        view.show();
+        VideoProcessor processor;
+        processor.SetImage(&img);
+        processor.SetFilter(filter);
+        processor.show();
     }
     else if (strcmp(argv[1], "--benchmark") == 0) {
         string image_path = "test.jpg";
