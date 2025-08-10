@@ -73,6 +73,32 @@ cmake -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo
 cmake --build build --parallel
 ```
 
+## Development
+
+### Code Formatting
+
+This project uses clang-format for consistent code formatting. The configuration follows C++ Core Guidelines and modern C++ practices.
+
+To format your code:
+
+```bash
+# Format a single file
+clang-format -i src/your_file.cpp
+
+# Format all C++ files in the project
+find . -name "*.cpp" -o -name "*.hpp" -o -name "*.cu" -o -name "*.h" | xargs clang-format -i
+
+# Check if files are properly formatted (CI/CD)
+find . -name "*.cpp" -o -name "*.hpp" -o -name "*.cu" -o -name "*.h" | xargs clang-format --dry-run --Werror
+```
+
+### IDE Integration
+
+Most modern IDEs support clang-format integration:
+- **VS Code**: Install the "C/C++" extension
+- **CLion**: Built-in support, enable in Settings → Editor → Code Style
+- **Vim/Neovim**: Use plugins like `vim-clang-format`
+
 ## Usage
 
 ### Real-time Video Processing
