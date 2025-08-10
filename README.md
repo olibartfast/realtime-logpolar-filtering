@@ -9,12 +9,68 @@ GPU-accelerated implementation of log-polar transformations for real-time image 
 - CMake 3.20+
 - C++17 compatible compiler
 
+### Ubuntu/Debian Dependencies
+
+```bash
+# Install build tools
+sudo apt update
+sudo apt install cmake build-essential
+
+# Install OpenCV
+sudo apt install libopencv-dev
+
+# For CUDA support, install NVIDIA CUDA Toolkit
+# Follow NVIDIA's official installation guide for your system
+```
+
+### CMake Options
+
+The following CMake options are available:
+
+- `CMAKE_BUILD_TYPE`: Build type (Release, Debug, RelWithDebInfo)
+- `CMAKE_CUDA_ARCHITECTURES`: Target CUDA architectures (auto-detected)
+- `OpenCV_DIR`: Custom OpenCV installation path
+
+Example with custom options:
+```bash
+cmake -B build \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_CUDA_ARCHITECTURES=86 \
+    -DOpenCV_DIR=/custom/opencv/path
+```
+
 ## Build
+
+### CMake Build (Recommended)
+
+```bash
+# Configure the build
+cmake -B build -DCMAKE_BUILD_TYPE=Release
+
+# Build the project
+cmake --build build --parallel
+
+# Optional: Install (requires sudo for system-wide installation)
+cmake --install build
+```
+
+### Alternative Build Method
 
 ```bash
 mkdir build && cd build
-cmake ..
-make -j4
+cmake .. -DCMAKE_BUILD_TYPE=Release
+make -j$(nproc)
+```
+
+### Build Types
+```bash
+# Debug build
+cmake -B build -DCMAKE_BUILD_TYPE=Debug
+cmake --build build --parallel
+
+# Release with debug info
+cmake -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo
+cmake --build build --parallel
 ```
 
 ## Usage
