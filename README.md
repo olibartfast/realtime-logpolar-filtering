@@ -41,7 +41,28 @@ cmake -B build \
 
 ## Build
 
-### CMake Build (Recommended)
+### CMake Presets (Recommended)
+
+This project includes CMake presets for common build configurations:
+
+```bash
+# List available presets
+cmake --list-presets
+
+# Configure and build using presets
+cmake --preset release
+cmake --build --preset release
+
+# Other useful presets
+cmake --preset debug           # Debug build with symbols
+cmake --preset asan            # AddressSanitizer for memory debugging
+cmake --preset tsan            # ThreadSanitizer for race condition detection
+cmake --preset cuda-debug      # CUDA debugging enabled
+cmake --preset clang           # Build with Clang compiler
+cmake --preset gcc             # Build with GCC compiler
+```
+
+### Manual CMake Build
 
 ```bash
 # Configure the build
@@ -62,7 +83,7 @@ cmake .. -DCMAKE_BUILD_TYPE=Release
 make -j$(nproc)
 ```
 
-### Build Types
+### Available Build Types
 ```bash
 # Debug build
 cmake -B build -DCMAKE_BUILD_TYPE=Debug
@@ -71,6 +92,20 @@ cmake --build build --parallel
 # Release with debug info
 cmake -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo
 cmake --build build --parallel
+```
+
+### Testing
+
+Run tests using CMake presets:
+
+```bash
+# Run tests with default configuration
+cmake --test --preset default
+
+# Run tests with specific configurations
+cmake --test --preset debug
+cmake --test --preset asan      # Memory error detection
+cmake --test --preset tsan      # Thread safety testing
 ```
 
 ## Development

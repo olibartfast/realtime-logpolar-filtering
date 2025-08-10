@@ -1,0 +1,207 @@
+{
+    "version": 3,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 20,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "default",
+            "displayName": "Default Config",
+            "description": "Default build using Ninja generator",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+            }
+        },
+        {
+            "name": "debug",
+            "displayName": "Debug",
+            "description": "Debug build with all debugging symbols",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "CMAKE_CXX_FLAGS_DEBUG": "-g -O0 -Wall -Wextra"
+            }
+        },
+        {
+            "name": "release",
+            "displayName": "Release",
+            "description": "Release build optimized for performance",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "CMAKE_CXX_FLAGS_RELEASE": "-O3 -DNDEBUG -march=native"
+            }
+        },
+        {
+            "name": "release-with-debug",
+            "displayName": "Release with Debug Info",
+            "description": "Release build with debug information for profiling",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+            }
+        },
+        {
+            "name": "asan",
+            "displayName": "AddressSanitizer",
+            "description": "Debug build with AddressSanitizer for memory error detection",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "CMAKE_CXX_FLAGS": "-fsanitize=address -fno-omit-frame-pointer -g",
+                "CMAKE_EXE_LINKER_FLAGS": "-fsanitize=address"
+            }
+        },
+        {
+            "name": "tsan",
+            "displayName": "ThreadSanitizer",
+            "description": "Debug build with ThreadSanitizer for race condition detection",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "CMAKE_CXX_FLAGS": "-fsanitize=thread -fno-omit-frame-pointer -g",
+                "CMAKE_EXE_LINKER_FLAGS": "-fsanitize=thread"
+            }
+        },
+        {
+            "name": "cuda-debug",
+            "displayName": "CUDA Debug",
+            "description": "Debug build with CUDA debugging enabled",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "CMAKE_CUDA_FLAGS": "-g -G"
+            }
+        },
+        {
+            "name": "clang",
+            "displayName": "Clang Compiler",
+            "description": "Release build using Clang compiler",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "CMAKE_C_COMPILER": "clang",
+                "CMAKE_CXX_COMPILER": "clang++"
+            }
+        },
+        {
+            "name": "gcc",
+            "displayName": "GCC Compiler",
+            "description": "Release build using GCC compiler",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "CMAKE_C_COMPILER": "gcc",
+                "CMAKE_CXX_COMPILER": "g++"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "default",
+            "displayName": "Default Build",
+            "configurePreset": "default"
+        },
+        {
+            "name": "debug",
+            "displayName": "Debug Build",
+            "configurePreset": "debug"
+        },
+        {
+            "name": "release",
+            "displayName": "Release Build",
+            "configurePreset": "release"
+        },
+        {
+            "name": "release-with-debug",
+            "displayName": "Release with Debug Info Build",
+            "configurePreset": "release-with-debug"
+        },
+        {
+            "name": "asan",
+            "displayName": "AddressSanitizer Build",
+            "configurePreset": "asan"
+        },
+        {
+            "name": "tsan",
+            "displayName": "ThreadSanitizer Build",
+            "configurePreset": "tsan"
+        },
+        {
+            "name": "cuda-debug",
+            "displayName": "CUDA Debug Build",
+            "configurePreset": "cuda-debug"
+        },
+        {
+            "name": "clang",
+            "displayName": "Clang Build",
+            "configurePreset": "clang"
+        },
+        {
+            "name": "gcc",
+            "displayName": "GCC Build",
+            "configurePreset": "gcc"
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "default",
+            "displayName": "Default Tests",
+            "configurePreset": "default",
+            "output": {
+                "outputOnFailure": true
+            }
+        },
+        {
+            "name": "debug",
+            "displayName": "Debug Tests",
+            "configurePreset": "debug",
+            "output": {
+                "outputOnFailure": true
+            }
+        },
+        {
+            "name": "asan",
+            "displayName": "AddressSanitizer Tests",
+            "configurePreset": "asan",
+            "output": {
+                "outputOnFailure": true
+            },
+            "environment": {
+                "ASAN_OPTIONS": "detect_leaks=1:abort_on_error=1"
+            }
+        },
+        {
+            "name": "tsan",
+            "displayName": "ThreadSanitizer Tests",
+            "configurePreset": "tsan",
+            "output": {
+                "outputOnFailure": true
+            },
+            "environment": {
+                "TSAN_OPTIONS": "abort_on_error=1"
+            }
+        }
+    ]
+}
