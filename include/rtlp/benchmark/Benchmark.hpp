@@ -11,7 +11,7 @@ namespace rtlp {
 namespace benchmark {
 
 class Benchmark{
-	rtlp::core::Image *image;
+	rtlp::core::Image *image_;
 	cv::Mat frame;
 	cv::Mat img;
 	string filename;
@@ -20,7 +20,7 @@ class Benchmark{
 
 public:
 	Benchmark(rtlp::core::Image *img, const std::string& image_path = "test.jpg", int iter = 10)
-		: image(img), filename(image_path), iterations(iter) {}
+		: image_(img), filename(image_path), iterations(iter) {}
 	~Benchmark() = default;
 	void ReadImg();
 	void Run();
