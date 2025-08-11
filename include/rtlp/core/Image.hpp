@@ -29,9 +29,9 @@ namespace core {
 class Image{
 private:
  int W{0}, H{0}; //width->num. columns, height->num. rows
- std::unique_ptr<int[]> data;
- int* ret;  // CUDA memory - keep as raw pointer
- int* cort; // CUDA memory - keep as raw pointer
+ std::unique_ptr<int[]> data_;
+ int* ret_;  // CUDA memory - keep as raw pointer
+ int* cort_; // CUDA memory - keep as raw pointer
 
 
 public:
@@ -40,14 +40,14 @@ public:
  // Input Data Array
  inline void SetW(int width) noexcept { W = width; }
  inline void SetH(int height) noexcept { H = height; }
- inline void Set(int c, int r, int val) noexcept { data[r*W+c] = val; }
- inline int Get(int c, int r) const noexcept { return data[r*W+c]; }	
+ inline void Set(int c, int r, int val) noexcept { data_[r*W+c] = val; }
+ inline int Get(int c, int r) const noexcept { return data_[r*W+c]; }	
  inline int GetW() const noexcept { return W; }
  inline int GetH() const noexcept { return H; }
- inline int* GetDataPnt() noexcept { return data.get(); }
- inline const int* GetDataPnt() const noexcept { return data.get(); }
- inline int* GetGpuRPnt() noexcept { return ret; }
- inline int* GetGpuCPnt() noexcept { return cort; }
+ inline int* GetDataPnt() noexcept { return data_.get(); }
+ inline const int* GetDataPnt() const noexcept { return data_.get(); }
+ inline int* GetGpuRPnt() noexcept { return ret_; }
+ inline int* GetGpuCPnt() noexcept { return cort_; }
  void SetData(int Wi,int He);
  void SetData(int Wi,int He, int* pnt);
  void SetDataGpuR(int *d);
